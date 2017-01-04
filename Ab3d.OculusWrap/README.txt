@@ -26,11 +26,13 @@ The core projects are based on the OculusWrap library that was created by MortIn
 Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
 To make working with 3D graphics even easier, the Ab3d.DXEngine also fully support the Ab3d.PowerToys library (see below).
-More information about Ab3d.DXEngine can be read on www.ab4d.com/DXEngine.aspx
+More information about the Ab3d.DXEngine can be read on www.ab4d.com/DXEngine.aspx
 
 Ab3d.PowerToys library is the ultimate helper library for WPF 3D graphics.
 The library contains many helper classes that greatly simply work with 3D graphics.
 It also comes with many samples that can be used to jump-start development.
+More information about the Ab3d.PowerToys library can be read on www.ab4d.com/PowerToys.aspx
 
-To compile the following two project, the Ab3d.DXEngine and Ab3d.PowerToys libraries needs to be installed.
+To compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects,
+the Ab3d.DXEngine and Ab3d.PowerToys libraries needs to be installed.
 A 60-day evaluation version can be downloaded from www.ab4d.com/Downloads.aspx
