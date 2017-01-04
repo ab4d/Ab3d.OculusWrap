@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ab3d.OculusWrap.DemoDX11", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ab3d.OculusWrap.UnitTests", "Ab3d.OculusWrap.UnitTests\Ab3d.OculusWrap.UnitTests.csproj", "{C7091A3C-F257-4CFC-ADB0-98390CF8A32B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A9EA84C-54E3-49B9-BC9A-C65FE9D3B210}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
