@@ -40,7 +40,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
         private FirstPersonCamera _camera;
         private XInputCameraController _xInputCameraController;
 
-        private OculusWrapVirtualRealityProvider _oculusRiftVirtualRealityProvider;
+        private volatile OculusWrapVirtualRealityProvider _oculusRiftVirtualRealityProvider;
 
         private string _originalWindowTitle;
 
@@ -239,12 +239,20 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 backgroundWorker.DoWork += (object sender, DoWorkEventArgs args) =>
                 {
                     // Create an action that will be called by Dispatcher
-                    var refreshDXEngineAction = new Action(_dxViewportView.Refresh);
+                    var refreshDXEngineAction = new Action(() =>
+                    {
+                        // Render DXEngine's 3D scene again
+                        if (_dxViewportView != null)
+                            _dxViewportView.Refresh();
+                    });
 
                     while (_dxViewportView != null && !_dxViewportView.IsDisposed) // Render until window is closed
                     {
                         if (_oculusRiftVirtualRealityProvider != null && _oculusRiftVirtualRealityProvider.LastSessionStatus.ShouldQuit) // Stop rendering - this will call RunWorkerCompleted where we can quit the application
                             break;
+
+                        // Sleep for 1 ms to allow WPF tasks to complete (for example handling XBOX controller events)
+                        System.Threading.Thread.Sleep(1);
 
                         // Call Refresh to render the DXEngine's scene
                         // This is a synchronous call and will wait until the scene is rendered. 
