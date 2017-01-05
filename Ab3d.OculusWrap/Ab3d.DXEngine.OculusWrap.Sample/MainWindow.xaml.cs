@@ -234,7 +234,15 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             // Start rendering
             if (RenderAt90Fps)
             {
-                // Use background worker to force more than 60 FPS (DispatcherTimer does not run faster then 60 FPS).
+                // WPF do not support rendering at more the 60 FPS.
+                // But with a trick where a rendering loop is created in a background thread, it is possible to achieve more than 60 FPS.
+                // In case of sumbiting frames to Oculus Rift, the ovr.SubmitFrame method will limit rendering to 90 FPS.
+                // 
+                // NOTE:
+                // When using DXEngine, it is also possible to render the scene in a background thread. 
+                // This requires that the 3D scene is also created in the background thread and that the events and other messages are 
+                // passed between UI and background thread in a thread safe way. This is too complicated for this simple sample project.
+                // To see one possible implementation of background rendering, see the BackgroundRenderingSample in the Ab3d.DXEngine.Wpf.Samples project.
                 var backgroundWorker = new BackgroundWorker();
                 backgroundWorker.DoWork += (object sender, DoWorkEventArgs args) =>
                 {
@@ -256,7 +264,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
                         // Call Refresh to render the DXEngine's scene
                         // This is a synchronous call and will wait until the scene is rendered. 
-                        // Because Oculus is limited to 90 fps, the call to hmd.SubmitFrame will limit rendering to 90 fps.
+                        // Because Oculus is limited to 90 fps, the call to ovr.SubmitFrame will limit rendering to 90 FPS.
                         Dispatcher.Invoke(refreshDXEngineAction); 
                     }
                 };
