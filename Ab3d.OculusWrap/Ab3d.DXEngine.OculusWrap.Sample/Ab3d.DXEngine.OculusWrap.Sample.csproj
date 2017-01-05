@@ -36,17 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ab3d.DXEngine">
+    <Reference Include="Ab3d.DXEngine, Version=2.0.6178.1040, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AB4D Products (Trial)\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.dll</HintPath>
+      <HintPath>C:\Program Files\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.dll</HintPath>
     </Reference>
-    <Reference Include="Ab3d.DXEngine.Wpf">
+    <Reference Include="Ab3d.DXEngine.Wpf, Version=2.0.6178.1040, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AB4D Products (Trial)\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.Wpf.dll</HintPath>
+      <HintPath>C:\Program Files\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Ab3d.PowerToys">
+    <Reference Include="Ab3d.PowerToys, Version=7.5.5960.1040, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AB4D Products (Trial)\Ab3d.PowerToys\bin\net40\Ab3d.PowerToys.dll</HintPath>
+      <HintPath>C:\Program Files\Ab3d.PowerToys\bin\net40\Ab3d.PowerToys.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
@@ -112,6 +112,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\dragon_vrip_res3_readme.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -122,6 +123,12 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Content Include="Resources\dragon_vrip_res3.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\dragon_vrip_res3.obj.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ab3d.DXEngine.OculusWrap\Ab3d.DXEngine.OculusWrap.csproj">

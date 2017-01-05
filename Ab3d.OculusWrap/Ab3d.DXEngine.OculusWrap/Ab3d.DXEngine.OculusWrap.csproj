@@ -34,9 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ab3d.DXEngine">
+    <Reference Include="Ab3d.DXEngine, Version=2.0.6178.1040, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\AB4D Products (Trial)\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.dll</HintPath>
+      <HintPath>C:\Program Files\Ab3d.DXEngine\bin\net40\Ab3d.DXEngine.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>

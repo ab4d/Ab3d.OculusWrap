@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -366,7 +367,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             var floorBox = new BoxVisual3D()
             {
                 CenterPosition = new Point3D(0, -0.5, 0),
-                Size = new Size3D(15, 1, 15),
+                Size = new Size3D(30, 1, 30),
                 Material = new DiffuseMaterial(Brushes.Green)
             };
 
@@ -375,18 +376,18 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
             double centerX = 0;
             double centerZ = 0;
-            double circleRadius = 2;
+            double circleRadius = 3;
             double boxesHeight = 1.3;
 
-            var boxMaterial = new DiffuseMaterial(Brushes.Gray);
-            var sphereMaterial = new MaterialGroup();
-            sphereMaterial.Children.Add(new DiffuseMaterial(Brushes.Gold));
-            sphereMaterial.Children.Add(new SpecularMaterial(Brushes.White, 16));
+            var grayMaterial = new DiffuseMaterial(Brushes.Gray);
+            var goldMaterial = new MaterialGroup();
+            goldMaterial.Children.Add(new DiffuseMaterial(Brushes.Gold));
+            goldMaterial.Children.Add(new SpecularMaterial(Brushes.White, 16));
 
             // Create spheres on top of boxes that are organized in a circle
             for (int a = 0; a < 360; a += 36)
             {
-                double rad = SharpDX.MathUtil.DegreesToRadians(a);
+                double rad = SharpDX.MathUtil.DegreesToRadians(a + 18);
                 double x = Math.Sin(rad) * circleRadius + centerX;
                 double z = Math.Cos(rad) * circleRadius + centerZ;
 
@@ -394,19 +395,52 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 {
                     CenterPosition = new Point3D(x, boxesHeight * 0.5, z),
                     Size = new Size3D(0.2, boxesHeight, 0.2),
-                    Material = boxMaterial
+                    Material = grayMaterial
                 };
 
                 var sphereVisual3D = new SphereVisual3D()
                 {
                     CenterPosition = new Point3D(x, boxesHeight + 0.1, z),
                     Radius = 0.1,
-                    Material = sphereMaterial
+                    Material = goldMaterial
                 };
 
                 rootVisual3D.Children.Add(boxVisual3D);
                 rootVisual3D.Children.Add(sphereVisual3D);
             }
+
+
+            // Read dragon model from obj file into Model3D object
+            string dragonFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\dragon_vrip_res3.obj");
+
+            var readerObj = new Ab3d.ReaderObj();
+            var dragonModel3D = readerObj.ReadModel3D(dragonFileName);
+
+            // Scale the model and translate its position
+            var transform3DGroup = new Transform3DGroup();
+            transform3DGroup.Children.Add(new ScaleTransform3D(10, 10, 10));
+            transform3DGroup.Children.Add(new TranslateTransform3D(0, 0, 0));
+
+            dragonModel3D.Transform = transform3DGroup;
+
+            Ab3d.Utilities.ModelUtils.ChangeMaterial(dragonModel3D, newMaterial: goldMaterial, newBackMaterial: null);
+
+            // Add it to the scene
+            var modelVisual3D = new ModelVisual3D();
+            modelVisual3D.Content = dragonModel3D;
+
+            rootVisual3D.Children.Add(modelVisual3D);
+
+
+            var dragonBaseBox = new BoxVisual3D()
+            {
+                CenterPosition = new Point3D(0, 0.27, 0),
+                Size = new Size3D(2.2, 0.54, 1),
+                Material = grayMaterial
+            };
+
+            rootVisual3D.Children.Add(dragonBaseBox);
+
 
             _viewport3D.Children.Clear();
             _viewport3D.Children.Add(rootVisual3D);
