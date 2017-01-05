@@ -292,6 +292,16 @@ namespace Ab3d.DXEngine.OculusWrap
                 _mirrorTextureDX.DebugName = "OculusMirrorTexture";
 
 
+            // To prevent DirectX from rendering more then one frame in the background, 
+            // we need to set the MaximumFrameLatency to 1.
+            // This prevents occasional dropped frames in Oculus Rift.
+            var dxgiDevice = dxScene.Device.QueryInterface<SharpDX.DXGI.Device1>();
+            if (dxgiDevice != null)
+            {
+                dxgiDevice.MaximumFrameLatency = 1;
+                dxgiDevice.Dispose();
+            }
+
             _frameIndex = 0;
 
             _matrixCamera = new MatrixCamera();
