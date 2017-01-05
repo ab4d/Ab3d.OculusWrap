@@ -59,6 +59,8 @@ The core projects are based on the OculusWrap library that was created by MortIn
 - **Ab3d.DXEngine.OculusWrap.Sample**  
   This sample allows you to use XBOX controller to walk around a simple 3D structure. The sample shows how easy is to create 3D content with Ab3d.DXEngine and Ab3d.PowerToys librariesto and that enabling Oculus Rift rendering required only a few additional lines of code.
 
+The following screenshot is showing the Ab3d.DXEngine.OculusWrap.Sample. And as you can see from the the window title and Oculus Performance overlay it has no problems with rendering at 90 FPS and still having plently of performance headroom.
+![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
 Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
