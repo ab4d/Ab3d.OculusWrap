@@ -174,7 +174,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
             // Add _dxViewportView to the RootGrid
             // Before that we resize the window to be big enough to show the mirrored texture
-            this.Width = _dxViewportView.Width + 100;
+            this.Width = _dxViewportView.Width + 30;
             this.Height = _dxViewportView.Height + 50;
 
             RootGrid.Children.Add(_dxViewportView);
