@@ -360,7 +360,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     if (_renderTime > 0)
                     {
                         double averageRenderTime = _renderTime / _framesCount;
-                        newTitle += string.Format("  DXEngine renderTime: {0:0.00}ms => {1:0} FPS", averageRenderTime, 1000.0 / averageRenderTime); // Show theoretical FPS from render time
+                        newTitle += string.Format("  DXEngine render time: {0:0.00}ms => {1:0} FPS", averageRenderTime, 1000.0 / averageRenderTime); // Show theoretical FPS from render time
                     }
 
                     this.Title = newTitle;
