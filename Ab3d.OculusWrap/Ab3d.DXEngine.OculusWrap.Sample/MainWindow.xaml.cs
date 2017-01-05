@@ -319,14 +319,27 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
         private void UpdateTitleFpsMeter()
         {
             // We count number of rendered frames for each second.
-            // At the beginning of the next second, we show the results in window title
-
             _framesCount++;
 
+            // We also store the sum of the time required by DXEngine to render one frame.
+            // This will be used to show average render time and the theoretical FPS (by DXEngine) in the window title
             if (_dxViewportView.DXScene != null && _dxViewportView.DXScene.Statistics != null)
-                _renderTime += _dxViewportView.DXScene.Statistics.TotalRenderTimeMs;
+            {
+                // The Statistics.TotalRenderTimeMs time also contains time where the code waits for ovr.SubmitFrame method.
+                // This method takes most of the time because it wait until 90 FPS sync.
+                // To get accurate DXEngine rendering time we need to sum the sub-process times.
+                // In the future version of DXEngine the VR time will be stored separately so we could substract it from the TotalRenderTimeMs.
+                //
+                //_renderTime += _dxViewportView.DXScene.Statistics.TotalRenderTimeMs;
+                _renderTime += _dxViewportView.DXScene.Statistics.UpdateTimeMs +
+                               _dxViewportView.DXScene.Statistics.PrepareRenderTimeMs +
+                               _dxViewportView.DXScene.Statistics.RenderShadowsMs +
+                               _dxViewportView.DXScene.Statistics.DrawRenderTimeMs +
+                               _dxViewportView.DXScene.Statistics.PostProcessingRenderTimeMs +
+                               _dxViewportView.DXScene.Statistics.CompleteRenderTimeMs;
+            }
 
-
+            // At the beginning of the next second, we show statistics in the window title
             int currentSecond = DateTime.Now.Second;
 
             if (_lastFpsMeterSecond == -1)
@@ -335,9 +348,10 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             }
             else if (currentSecond != _lastFpsMeterSecond)
             {
-                // We start measuring in the middle of the first second so the result for the first second is not correct - do not show it
+                // If we are here, then a new second has begun
                 if (_isFirstSecond)
                 {
+                    // We start measuring in the middle of the first second so the result for the first second is not correct - do not show it
                     _isFirstSecond = false;
                 }
                 else
@@ -346,7 +360,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     if (_renderTime > 0)
                     {
                         double averageRenderTime = _renderTime / _framesCount;
-                        newTitle += string.Format("  DXRenderTime: {0:0.0}ms => {1:0} FPS", averageRenderTime, 1000.0 / averageRenderTime); // Show theoretical FPS from render time
+                        newTitle += string.Format("  DXEngine renderTime: {0:0.00}ms => {1:0} FPS", averageRenderTime, 1000.0 / averageRenderTime); // Show theoretical FPS from render time
                     }
 
                     this.Title = newTitle;
