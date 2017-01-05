@@ -430,12 +430,8 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             var readerObj = new Ab3d.ReaderObj();
             var dragonModel3D = readerObj.ReadModel3D(dragonFileName);
 
-            // Scale the model and translate its position
-            var transform3DGroup = new Transform3DGroup();
-            transform3DGroup.Children.Add(new ScaleTransform3D(10, 10, 10));
-            transform3DGroup.Children.Add(new TranslateTransform3D(0, 0, 0));
-
-            dragonModel3D.Transform = transform3DGroup;
+            // Scale the model
+            dragonModel3D.Transform = new ScaleTransform3D(10, 10, 10);
 
             Ab3d.Utilities.ModelUtils.ChangeMaterial(dragonModel3D, newMaterial: goldMaterial, newBackMaterial: null);
 
@@ -446,6 +442,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             rootVisual3D.Children.Add(modelVisual3D);
 
 
+            // Add another box that will represet a base for the dragon model
             var dragonBaseBox = new BoxVisual3D()
             {
                 CenterPosition = new Point3D(0, 0.27, 0),
