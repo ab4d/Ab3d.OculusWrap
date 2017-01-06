@@ -32,7 +32,7 @@ See below for more info.
 2. Download the latest Oculus SDK for PC Development (https://developer3.oculus.com/downloads/)
 3. Open Ab3d.OculusWrap solution in Visual Studio
 4. Compile the solution. If you do not have Ab3d.DXEngine and Ab3d.PowerToys installed, you will not be able to compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects. But you can still start the Ab3d.OculusWrap.DemoDX11 project with right clicking on the project and then selecting Debug -> Start new instance.
-5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from www.ab4d.com/Downloads.aspx. 
+5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
 
 
 ### Projects in the Ab3d.OculusWrap solution
@@ -50,6 +50,7 @@ See below for more info.
 
 The core projects are based on the OculusWrap library that was created by MortInfinite (https://oculuswrap.codeplex.com/)
 
+The projects are compiled for .Net 4.0 CP and are using SharpDX 2.6.3 (the latest version of SharpDX that works with .Net 4.0). If you would like to use SharpDX 3.1 (or newer), you need to change the target framefork to .Net 4.5 (or higher) before updating SharpDX library.
 
 2) Projects that work with Ab3d.DXEngine and Ab3d.PowerToys libraries:
 
