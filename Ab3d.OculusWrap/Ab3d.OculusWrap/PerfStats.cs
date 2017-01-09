@@ -59,14 +59,26 @@ namespace Ab3d.OculusWrap
     /// <seealso cref="PerfStatsPerCompositorFrame"/>
     public struct PerfStats
     {
+        /// <summary>
+        /// FrameStats
+        /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = OvrWrap.MaxProvidedFrameStats)]
         public PerfStatsPerCompositorFrame[] FrameStats;
 
+        /// <summary>
+        /// FrameStatsCount
+        /// </summary>
         public int FrameStatsCount;
 
+        /// <summary>
+        /// AnyFrameStatsDropped
+        /// </summary>
         [MarshalAs(UnmanagedType.U1)] // Marshal byte to bool (0 = false, all other = true)
         public bool AnyFrameStatsDropped;
 
+        /// <summary>
+        /// AdaptiveGpuPerformanceScale
+        /// </summary>
         public float AdaptiveGpuPerformanceScale;
     }
 }

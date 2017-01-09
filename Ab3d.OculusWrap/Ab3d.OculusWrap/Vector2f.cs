@@ -30,8 +30,21 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2f
     {
-        public float X, Y;
+        /// <summary>
+        /// X
+        /// </summary>
+        public float X;
 
+        /// <summary>
+        /// Y
+        /// </summary>
+        public float Y;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="x">x</param>
+        /// <param name="y">y</param>
         public Vector2f(float x, float y)
         {
             this.X = x;

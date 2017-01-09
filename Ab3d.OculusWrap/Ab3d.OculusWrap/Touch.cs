@@ -29,44 +29,95 @@ namespace Ab3d.OculusWrap
     /// </summary>
     public enum Touch
     {
-        A              = Button.A,
-        B              = Button.B,
-        RThumb         = Button.RThumb,
-        RThumbRest     = 0x00000008,
-        RIndexTrigger  = 0x00000010,
+        /// <summary>
+        /// A
+        /// </summary>
+        A = Button.A,
+
+        /// <summary>
+        /// B
+        /// </summary>
+        B = Button.B,
+
+        /// <summary>
+        /// RThumb
+        /// </summary>
+        RThumb = Button.RThumb,
+
+        /// <summary>
+        /// RThumbRest
+        /// </summary>
+        RThumbRest = 0x00000008,
+
+        /// <summary>
+        /// RIndexTrigger        /// </summary>
+        RIndexTrigger = 0x00000010,
 
         /// <summary>
         /// Bit mask of all the button touches on the right controller
         /// </summary>
-        RButtonMask    = A | B | RThumb | RThumbRest | RIndexTrigger,
+        RButtonMask = A | B | RThumb | RThumbRest | RIndexTrigger,
 
-        X              = Button.X,
-        Y              = Button.Y,
-        LThumb         = Button.LThumb,
-        LThumbRest     = 0x00000800,
-        LIndexTrigger  = 0x00001000,
+        /// <summary>
+        /// X
+        /// </summary>
+        X = Button.X,
+
+        /// <summary>
+        /// Y
+        /// </summary>
+        Y = Button.Y,
+
+        /// <summary>
+        /// LThumb
+        /// </summary>
+        LThumb = Button.LThumb,
+
+        /// <summary>
+        /// LThumbRest
+        /// </summary>
+        LThumbRest = 0x00000800,
+
+        /// <summary>
+        /// LIndexTrigger
+        /// </summary>
+        LIndexTrigger = 0x00001000,
 
         /// <summary>
         /// Bit mask of all the button touches on the left controller
         /// </summary>
-        LButtonMask    = X | Y | LThumb | LThumbRest | LIndexTrigger,
+        LButtonMask = X | Y | LThumb | LThumbRest | LIndexTrigger,
 
         // Finger pose state 
         // Derived internally based on distance, proximity to sensors and filtering.
+        /// <summary>
+        /// RIndexPointing
+        /// </summary>
         RIndexPointing = 0x00000020,
-        RThumbUp       = 0x00000040,    
+
+        /// <summary>
+        /// RThumbUp
+        /// </summary>
+        RThumbUp = 0x00000040,    
 
         /// <summary>
         /// Bit mask of all right controller poses
         /// </summary>
-        RPoseMask      = RIndexPointing | RThumbUp,
+        RPoseMask = RIndexPointing | RThumbUp,
 
+        /// <summary>
+        /// LIndexPointing
+        /// </summary>
         LIndexPointing = 0x00002000,
-        LThumbUp       = 0x00004000,
+
+        /// <summary>
+        /// LThumbUp
+        /// </summary>
+        LThumbUp = 0x00004000,
 
         /// <summary>
         /// Bit mask of all left controller poses
         /// </summary>
-        LPoseMask      = LIndexPointing | LThumbUp,
+        LPoseMask = LIndexPointing | LThumbUp,
     }
 }

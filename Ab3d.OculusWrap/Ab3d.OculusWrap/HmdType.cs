@@ -27,16 +27,59 @@ namespace Ab3d.OculusWrap
     /// </summary>
     public enum HmdType
     {
-        None		= 0,    
-        DK1			= 3,
-        DKHD		= 4,    
-        DK2			= 6,
-        CB			= 8,
-        Other		= 9,
-        E3_2015		= 10,
-        ES06		= 11,
-        ES09		= 12,
-        ES11		= 13,
-        CV1			= 14,
+        /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// DK1
+        /// </summary>
+        DK1 = 3,
+
+        /// <summary>
+        /// DKHD
+        /// </summary>
+        DKHD = 4,
+
+        /// <summary>
+        /// DK2
+        /// </summary>
+        DK2 = 6,
+
+        /// <summary>
+        /// CB
+        /// </summary>
+        CB = 8,
+
+        /// <summary>
+        /// Other
+        /// </summary>
+        Other = 9,
+
+        /// <summary>
+        /// E3_2015
+        /// </summary>
+        E3_2015 = 10,
+
+        /// <summary>
+        /// ES06
+        /// </summary>
+        ES06 = 11,
+
+        /// <summary>
+        /// ES09
+        /// </summary>
+        ES09 = 12,
+
+        /// <summary>
+        /// ES11
+        /// </summary>
+        ES11 = 13,
+
+        /// <summary>
+        /// CV1
+        /// </summary>
+        CV1 = 14,
     }
 }

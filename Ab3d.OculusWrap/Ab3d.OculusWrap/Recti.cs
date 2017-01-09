@@ -31,13 +31,25 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Recti
     {
+        /// <summary>
+        /// Position
+        /// </summary>
         public Vector2i Position;
+
+        /// <summary>
+        /// Size
+        /// </summary>
         public Sizei Size;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
         public Recti(Vector2i position, Sizei size)
         {
-            Position	= position;
-            Size		= size;
+            Position = position;
+            Size = size;
         }
     }
 }

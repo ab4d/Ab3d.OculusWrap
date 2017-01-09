@@ -29,8 +29,19 @@ namespace Ab3d.OculusWrap
     /// <seealso cref="TrackingState"/>
     public enum HandType
     {
-        Left  = 0,
+        /// <summary>
+        /// Left
+        /// </summary>
+        Left = 0,
+
+        /// <summary>
+        /// Right
+        /// </summary>
         Right = 1,
+
+        /// <summary>
+        /// Count
+        /// </summary>
         Count = 2,
     }
 }

@@ -30,10 +30,16 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Posef
     {
+        /// <summary>
+        /// Orientation
+        /// </summary>
         [MarshalAs(UnmanagedType.Struct)]
-        public Quaternionf  Orientation;
+        public Quaternionf Orientation;
 
+        /// <summary>
+        /// Position
+        /// </summary>
         [MarshalAs(UnmanagedType.Struct)]
-        public Vector3f		Position;    
+        public Vector3f Position;    
     }
 }

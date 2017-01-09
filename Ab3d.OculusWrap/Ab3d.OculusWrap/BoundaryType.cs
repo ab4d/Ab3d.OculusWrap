@@ -27,10 +27,14 @@ namespace Ab3d.OculusWrap
     /// </summary>	        
     public enum BoundaryType
     {
-        // Outer boundary - closely represents user setup walls
+        /// <summary>
+        /// Outer boundary - closely represents user setup walls
+        /// </summary>
         Outer = 0x0001,
 
-        // Play area - safe rectangular area inside outer boundary which can optionally be used to restrict user interactions and motion.
+        /// <summary>
+        /// Play area - safe rectangular area inside outer boundary which can optionally be used to restrict user interactions and motion. 
+        /// </summary>
         PlayArea = 0x0100,
     }
 }

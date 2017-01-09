@@ -30,16 +30,39 @@ namespace Ab3d.OculusWrap
     [Flags]
     public enum ControllerType
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None		= 0x00,
-        LTouch		= 0x01,
-        RTouch		= 0x02,
-        Touch		= 0x03,
-        Remote		= 0x04,
-        XBox		= 0x10,
+
+        /// <summary>
+        /// LTouch
+        /// </summary>
+        LTouch = 0x01,
+
+        /// <summary>
+        /// RTouch
+        /// </summary>
+        RTouch = 0x02,
+
+        /// <summary>
+        /// Touch
+        /// </summary>
+        Touch = 0x03,
+
+        /// <summary>
+        /// Remote
+        /// </summary>
+        Remote = 0x04,
+
+        /// <summary>
+        /// XBox
+        /// </summary>
+        XBox = 0x10,
 
         /// <summary>
         /// Operate on or query whichever controller is active.
         /// </summary>
-        Active		= 0xff
+        Active = 0xff
     }
 }

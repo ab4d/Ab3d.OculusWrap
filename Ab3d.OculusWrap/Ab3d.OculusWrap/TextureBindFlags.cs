@@ -34,6 +34,9 @@ namespace Ab3d.OculusWrap
     [Flags]
     public enum TextureBindFlags
     {
+        /// <summary>
+        /// None
+        /// </summary>
         None,
 
         /// <summary>

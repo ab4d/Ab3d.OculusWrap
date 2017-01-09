@@ -24,24 +24,75 @@ using System.Runtime.InteropServices;
 
 namespace Ab3d.OculusWrap
 {
+    /// <summary>
+    /// 4x4 Matrix used in Oculus SDK
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Matrix4f
     {
+        /// <summary>
+        /// M11
+        /// </summary>
         public float M11;
+        /// <summary>
+        /// M12
+        /// </summary>
         public float M12;
+        /// <summary>
+        /// M13
+        /// </summary>
         public float M13;
+        /// <summary>
+        /// M14
+        /// </summary>
         public float M14;
+        /// <summary>
+        /// M21
+        /// </summary>
         public float M21;
+        /// <summary>
+        /// M22
+        /// </summary>
         public float M22;
+        /// <summary>
+        /// M23
+        /// </summary>
         public float M23;
+        /// <summary>
+        /// M24
+        /// </summary>
         public float M24;
+        /// <summary>
+        /// M31
+        /// </summary>
         public float M31;
+        /// <summary>
+        /// M32
+        /// </summary>
         public float M32;
+        /// <summary>
+        /// M33
+        /// </summary>
         public float M33;
+        /// <summary>
+        /// M34
+        /// </summary>
         public float M34;
+        /// <summary>
+        /// M41
+        /// </summary>
         public float M41;
+        /// <summary>
+        /// M42
+        /// </summary>
         public float M42;
+        /// <summary>
+        /// M43
+        /// </summary>
         public float M43;
+        /// <summary>
+        /// M44
+        /// </summary>
         public float M44;
     }
 }

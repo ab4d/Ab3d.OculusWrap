@@ -30,8 +30,27 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector3f
     {
-        public float X, Y, Z;
+        /// <summary>
+        /// X
+        /// </summary>
+        public float X;
 
+        /// <summary>
+        /// Y
+        /// </summary>
+        public float Y;
+
+        /// <summary>
+        /// Z
+        /// </summary>
+        public float Z;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="x">x</param>
+        /// <param name="y">y</param>
+        /// <param name="z">z</param>
         public Vector3f(float x, float y, float z)
         {
             this.X	= x;

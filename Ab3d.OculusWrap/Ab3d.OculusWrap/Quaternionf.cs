@@ -30,8 +30,33 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Quaternionf
     {
-        public float X, Y, Z, W;
+        /// <summary>
+        /// X
+        /// </summary>
+        public float X;
+        
+        /// <summary>
+        /// Y
+        /// </summary>
+        public float Y;
+        
+        /// <summary>
+        /// Z
+        /// </summary>
+        public float Z;
+        
+        /// <summary>
+        /// W
+        /// </summary>
+        public float W;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="w"></param>
         public Quaternionf(float x, float y, float z, float w)
         {
             this.X	= x;

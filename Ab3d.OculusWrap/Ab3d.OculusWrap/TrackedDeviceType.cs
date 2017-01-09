@@ -30,9 +30,24 @@ namespace Ab3d.OculusWrap
     [Flags]
     public enum TrackedDeviceType
     {
+        /// <summary>
+        /// HMD
+        /// </summary>
         HMD = 0x0001,
+
+        /// <summary>
+        /// LTouch
+        /// </summary>
         LTouch = 0x0002,
+
+        /// <summary>
+        /// RTouch
+        /// </summary>
         RTouch = 0x0004,
+
+        /// <summary>
+        /// Touch
+        /// </summary>
         Touch = 0x0006,
     }
 }

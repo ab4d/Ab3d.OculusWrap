@@ -29,6 +29,28 @@ using System.Dynamic;
 
 namespace Ab3d.OculusWrap
 {
+    /// <summary>
+    /// OvrWrap is a base Oculus Wrap class that defines Oculus SKD methods.
+    /// To create an instance of this class use <see cref="Create()"/>, <see cref="Create32()"/> or <see cref="Create64()"/> static method.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <b>OvrWrap</b> is a base Oculus Wrap class that defines Oculus SKD methods.
+    /// </para>
+    /// <para>
+    /// To create an instance of this class use <see cref="Create()"/>, <see cref="Create32()"/> or <see cref="Create64()"/> static method (the later two provide slightly better performance because the method calls do not use virtual table - see method remarks for more info).
+    /// </para>
+    /// <para>
+    /// OvrWrap class do not create any resources so you do not need to dispose it.
+    /// </para>
+    /// <para>
+    /// It is possible to manually load the OVR library with the static <see cref="LoadLibrary()"/> method.
+    /// This allows manual unloading of the library with the static <see cref="UnloadLibrary()"/> method.
+    /// It is not needed to manually load the library before created an OvrWrap instace.
+    /// But with calling LoadLibrary method, it is possible to unload the library later to free the memory that is used by the library 
+    /// (this is not possible is the library is loaded automatically in Create, Create32 or Create64 method).
+    /// </para>
+    /// </remarks>
     public abstract class OvrWrap
     {
         private static IntPtr _oculusLibraryPtr;
@@ -41,9 +63,14 @@ namespace Ab3d.OculusWrap
         public abstract string OvrDllName { get; }
 
 
+
         #region Constants and structures
+        // The Oculus SDK is full of missing comments.
+        // Ignore warnings regarding missing comments, in this class.
+        #pragma warning disable 1591
 
         #region Definitions found in OVR_CAPI_Keys_h
+
         public const string OVR_KEY_USER = "User";              // string
         public const string OVR_KEY_NAME = "Name";              // string
         public const string OVR_KEY_GENDER = "Gender";            // string "Male", "Female", or "Unknown"
@@ -73,6 +100,8 @@ namespace Ab3d.OculusWrap
         public const int OVR_AUDIO_MAX_DEVICE_STR_SIZE = 128;
         #endregion
 
+        #pragma warning restore 1591
+
         /// <summary>
         /// Specifies the maximum number of layers supported by ovr_SubmitFrame.
         /// </summary>
@@ -87,6 +116,22 @@ namespace Ab3d.OculusWrap
         #endregion
 
         #region Static Create
+        /// <summary>
+        /// Creates an <see cref="OvrWrap32"/> or <see cref="OvrWrap64"/> instance based on the current process. 
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <b>Create</b> method can be used to create an instance of <see cref="OvrWrap32"/> or <see cref="OvrWrap64"/> instance based on the current process type.
+        /// The method returns base <see cref="OvrWrap"/> class.
+        /// </para>
+        /// <para>
+        /// When you are targeting only x64 platform, you can use the <see cref="Create64()"/> method.
+        /// </para>
+        /// <para>
+        /// When you are targeting only x86 platform, you can use the <see cref="Create32()"/> method.
+        /// </para>
+        /// </remarks>
+        /// <returns>OvrWrap instance</returns>
         public static OvrWrap Create()
         {
             if (Environment.Is64BitProcess)
@@ -95,6 +140,26 @@ namespace Ab3d.OculusWrap
             return new OvrWrap32();
         }
 
+        /// <summary>
+        /// Creates an <see cref="OvrWrap32"/> instance that can be used only in x86 processes.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// When you are targeting only x86 platform, you can call this method to get an instance of <see cref="OvrWrap32"/> class.
+        /// </para>
+        /// <para>
+        /// When you call Oculus SKD methods from OvrWrap32 class, this provides a small performance improvement compared to calling the same methods on the base <see cref="OvrWrap"/> class.
+        /// The reason for this is that the OvrWrap class is abstract and therefore each method call require a lookup in the virtual table where the OvrWrap32 is sealed and therefore the direct method call can be made 
+        /// (but you must specify the type as OvrWrap32 and not OvrWrap; var is also ok). Note that because the number of Oculus SDK calls is not big (compared to DirectX calls), the performance gain is probably not noticeable.
+        /// </para>
+        /// <para>
+        /// When you are targeting only x64 platform, you can use the <see cref="Create64()"/> method.
+        /// </para>
+        /// <para>
+        /// When you are targeting AnyCpu and therefore do not know the target platform, you need to use <see cref="Create()"/> method.
+        /// </para>
+        /// </remarks>
+        /// <returns>OvrWrap32 instance</returns>
         public static OvrWrap32 Create32()
         {
             if (Environment.Is64BitProcess)
@@ -103,6 +168,26 @@ namespace Ab3d.OculusWrap
             return new OvrWrap32();
         }
 
+        /// <summary>
+        /// Creates an <see cref="OvrWrap64"/> instance that can be used only in x64 processes.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// When you are targeting only x64 platform, you can call this method to get an instance of <see cref="OvrWrap64"/> class.
+        /// </para>
+        /// <para>
+        /// When you call Oculus SKD methods from OvrWrap64 class, this provides a small performance improvement compared to calling the same methods on the base <see cref="OvrWrap"/> class.
+        /// The reason for this is that the OvrWrap class is abstract and therefore each method call require a lookup in the virtual table where the OvrWrap64 is sealed and therefore the direct method call can be made 
+        /// (but you must specify the type as OvrWrap64 and not OvrWrap; var is also ok). Note that because the number of Oculus SDK calls is not big (compared to DirectX calls), the performance gain is probably not noticeable.
+        /// </para>
+        /// <para>
+        /// When you are targeting only x86 platform, you can use the <see cref="Create32()"/> method.
+        /// </para>
+        /// <para>
+        /// When you are targeting AnyCpu and therefore do not know the target platform, you need to use <see cref="Create()"/> method.
+        /// </para>
+        /// </remarks>
+        /// <returns>OvrWrap64 instance</returns>
         public static OvrWrap64 Create64()
         {
             if (!Environment.Is64BitProcess)
@@ -123,7 +208,7 @@ namespace Ab3d.OculusWrap
 
             //string oculusDllName = Environment.Is64BitProcess ? "LibOVRRT64_1.dll" : "LibOVRRT32_1.dll";
             string oculusDllName = Environment.Is64BitProcess ? OvrWrap64._ovrDllName : OvrWrap32._ovrDllName;
-
+ 
             _oculusLibraryPtr = NativeMethods.LoadLibrary(oculusDllName);
             if (_oculusLibraryPtr == IntPtr.Zero)
             {

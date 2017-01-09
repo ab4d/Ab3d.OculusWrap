@@ -30,8 +30,21 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Sizei
     {
-        public int Width, Height;
+        /// <summary>
+        /// Width
+        /// </summary>
+        public int Width;
 
+        /// <summary>
+        /// Height
+        /// </summary>
+        public int Height;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public Sizei(int width, int height)
         {
             this.Width	= width;

@@ -33,10 +33,25 @@ namespace Ab3d.OculusWrap
     /// </summary>
     [Flags]
     public enum Button
-    {    
+    {
+        /// <summary>
+        /// A
+        /// </summary>
         A         = 0x00000001,
+
+        /// <summary>
+        /// B
+        /// </summary>
         B         = 0x00000002,
-        RThumb    = 0x00000004,
+
+        /// <summary>
+        /// RThumb
+        /// </summary>
+        RThumb = 0x00000004,
+
+        /// <summary>
+        /// RShoulder
+        /// </summary>
         RShoulder = 0x00000008,
 
         /// <summary>
@@ -44,9 +59,24 @@ namespace Ab3d.OculusWrap
         /// </summary>
         RMask     = A | B | RThumb | RShoulder,
 
+        /// <summary>
+        /// X
+        /// </summary>
         X         = 0x00000100,
+
+        /// <summary>
+        /// Y
+        /// </summary>
         Y         = 0x00000200,
-        LThumb    = 0x00000400,  
+
+        /// <summary>
+        /// LThumb
+        /// </summary>
+        LThumb = 0x00000400,
+
+        /// <summary>
+        /// LShoulder
+        /// </summary>
         LShoulder = 0x00000800,
 
         /// <summary>
@@ -55,25 +85,41 @@ namespace Ab3d.OculusWrap
         LMask     = X | Y | LThumb | LShoulder,
 
         // Navigation through DPad.
-        Up        = 0x00010000,
-        Down      = 0x00020000,
-        Left      = 0x00040000,
-        Right     = 0x00080000,
+
+        /// <summary>
+        /// DPad Up
+        /// </summary>
+        Up = 0x00010000,
+
+        /// <summary>
+        /// DPad Down
+        /// </summary>
+        Down = 0x00020000,
+
+        /// <summary>
+        /// DPad Left
+        /// </summary>
+        Left = 0x00040000,
+
+        /// <summary>
+        /// DPad Right
+        /// </summary>
+        Right = 0x00080000,
 
         /// <summary>
         /// Start on XBox controller.
         /// </summary>
-        Enter     = 0x00100000, 
+        Enter = 0x00100000, 
 
         /// <summary>
         /// Back on Xbox controller.
         /// </summary>
-        Back      = 0x00200000,
+        Back = 0x00200000,
 
         /// <summary>
         /// Volume button on Oculus Remote. Not present on XBox or Touch controllers.
         /// </summary>
-        VolUp     = 0x00400000,
+        VolUp = 0x00400000,
 
         /// <summary>
         /// Volume button on Oculus Remote. Not present on XBox or Touch controllers.

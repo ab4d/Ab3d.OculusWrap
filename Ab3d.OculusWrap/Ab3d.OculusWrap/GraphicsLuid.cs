@@ -24,6 +24,9 @@ using System.Runtime.InteropServices;
 
 namespace Ab3d.OculusWrap
 {
+    /// <summary>
+    /// GraphicsLuid
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct GraphicsLuid
     {

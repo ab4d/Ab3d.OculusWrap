@@ -29,8 +29,19 @@ namespace Ab3d.OculusWrap
     /// </summary>
     public enum EyeType
     {
+        /// <summary>
+        /// Left
+        /// </summary>
         Left  = 0,
+
+        /// <summary>
+        /// Right
+        /// </summary>
         Right = 1,
+
+        /// <summary>
+        /// Count
+        /// </summary>
         Count = 2
     }
 }

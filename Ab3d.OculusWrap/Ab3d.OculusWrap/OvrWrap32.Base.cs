@@ -24,6 +24,9 @@ using System;
 
 namespace Ab3d.OculusWrap
 {
+    /// <summary>
+    /// OvrWrap32 is an instance of base <see cref="OvrWrap"/> class that is created for x86 process. See remarks of the base class for more info.
+    /// </summary>
     public sealed partial class OvrWrap32 : OvrWrap
     {
         internal const string _ovrDllName = "LibOVRRT32_1.dll";

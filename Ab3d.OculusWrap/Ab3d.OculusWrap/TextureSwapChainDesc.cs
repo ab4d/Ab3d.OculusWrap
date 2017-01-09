@@ -33,7 +33,13 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct TextureSwapChainDesc
     {
+        /// <summary>
+        /// Type
+        /// </summary>
         public TextureType			Type;
+        /// <summary>
+        /// Format
+        /// </summary>
         public TextureFormat		Format;
 
         /// <summary>
@@ -42,10 +48,19 @@ namespace Ab3d.OculusWrap
         /// </summary>
         public int					ArraySize;
 
+        /// <summary>
+        /// Width
+        /// </summary>
         public int					Width;
 
+        /// <summary>
+        /// Height
+        /// </summary>
         public int					Height;
 
+        /// <summary>
+        /// MipLevels
+        /// </summary>
         public int					MipLevels;
 
         /// <summary>

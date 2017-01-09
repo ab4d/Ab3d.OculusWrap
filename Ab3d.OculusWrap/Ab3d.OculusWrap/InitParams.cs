@@ -78,11 +78,19 @@ namespace Ab3d.OculusWrap
 		/// </remarks>
 		public uint ConnectionTimeoutMS;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
 	    public InitParams()
 	    {
 	    }
 
-	    public InitParams(InitFlags flags, uint requestedMinorVersion)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="flags">InitFlags</param>
+        /// <param name="requestedMinorVersion">uint</param>
+        public InitParams(InitFlags flags, uint requestedMinorVersion)
 	    {
 	        Flags = flags;
 	        RequestedMinorVersion = requestedMinorVersion;

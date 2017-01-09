@@ -22,12 +22,19 @@
 
 namespace Ab3d.OculusWrap
 {
+    // The Oculus SDK is full of missing comments.
+    // Ignore warnings regarding missing comments, in this class.
+    #pragma warning disable 1591
+
     /// <summary>
     /// The format of a texture.
     /// </summary>
     /// <see cref="TextureSwapChainDesc"/>
     public enum TextureFormat
     {
+        /// <summary>
+        /// Unknown
+        /// </summary>
         Unknown = 0,
 
         /// <summary>
@@ -85,4 +92,6 @@ namespace Ab3d.OculusWrap
         BC7_UNorm = 23,
         BC7_UNorm_SRgb = 24,
     }
+
+    #pragma warning restore 1591
 }

@@ -32,9 +32,24 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct MirrorTextureDesc
     {
-        public TextureFormat		Format;
-        public int					Width;
-        public int					Height;
-        public TextureMiscFlags		MiscFlags;
+        /// <summary>
+        /// Format
+        /// </summary>
+        public TextureFormat Format;
+
+        /// <summary>
+        /// Width        
+        /// </summary>
+        public int Width;
+
+        /// <summary>
+        /// Height
+        /// </summary>
+        /// 
+        public int Height;
+        /// <summary>
+        /// MiscFlags
+        /// </summary>
+        public TextureMiscFlags MiscFlags;
     }
 }

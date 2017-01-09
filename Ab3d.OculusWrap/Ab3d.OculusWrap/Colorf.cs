@@ -30,14 +30,39 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential)]
     public struct Colorf
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="r">r</param>
+        /// <param name="g">g</param>
+        /// <param name="b">b</param>
+        /// <param name="a">a</param>
         public Colorf(float r, float g, float b, float a)
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
+            this.R = r;
+            this.G = g;
+            this.B = b;
+            this.A = a;
         }
 
-        public float r, g, b, a;
+        /// <summary>
+        /// R
+        /// </summary>
+        public float R;
+
+        /// <summary>
+        /// G
+        /// </summary>
+        public float G;
+
+        /// <summary>
+        /// B
+        /// </summary>
+        public float B;
+
+        /// <summary>
+        /// A
+        /// </summary>
+        public float A;
     }
 }

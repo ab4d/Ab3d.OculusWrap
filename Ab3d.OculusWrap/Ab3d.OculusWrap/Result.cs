@@ -534,25 +534,5 @@ namespace Ab3d.OculusWrap
         /// </summary>
         MisformattedBlock = -9002, 
         #endregion
-
-        #region Fatal Errors
-        /// <summary>
-        /// A runtime exception occurred. 
-        /// The application is required to shutdown LibOVR and re-initialize it before this error state will be cleared.
-        /// </summary>
-        RuntimeException = -7000,
-
-        MetricsUnknownApp            = -90000,
-        MetricsDuplicateApp          = -90001,
-        MetricsNoEvents              = -90002,
-        MetricsRuntime               = -90003,
-        MetricsFile                  = -90004,
-        MetricsNoClientInfo          = -90005,
-        MetricsNoAppMetaData         = -90006,
-        MetricsNoApp                 = -90007,
-        MetricsOafFailure            = -90008,
-        MetricsSessionAlreadyActive  = -90009,
-        MetricsSessionNotActive      = -90010,
-        #endregion
     }
 }
