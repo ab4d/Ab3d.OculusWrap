@@ -251,4 +251,5 @@ paket-files/
 .idea/
 *.sln.iml
 /Ab3d.OculusWrap/*.bat
-/Ab3d.OculusWrap/Ab3d.OculusWrap/*.nupkg
+*.nupkg
+*.nuspec
