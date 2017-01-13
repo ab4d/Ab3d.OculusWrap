@@ -1,7 +1,11 @@
 # Ab3d.OculusWrap
-.Net wrapper for Oculus Rift SDK.
+Ab3d.OculusWrap is a .Net wrapper for Oculus Rift SDK.
+
+![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
 The current version of Ab3d.OculusWrap is built for Oculus SDK 1.10.1 (2016-12-06).
+
+The library is also available as a NuGet package: Ab3d.OculusWrap (https://www.nuget.org/packages/Ab3d.OculusWrap/)
 
 The project is based on the OculusWrap library that was created by MortInfinite (https://oculuswrap.codeplex.com/).
 Because the original OculusWrap library was discontinued on April 2016 (with support for Oculus SDK 1.3.2), 
@@ -61,7 +65,6 @@ The projects are compiled for .Net 4.0 CP and are using SharpDX 2.6.3 (the lates
   This sample allows you to use XBOX controller to walk around a simple 3D structure. The sample shows how easy is to create 3D content with Ab3d.DXEngine and Ab3d.PowerToys librariesto and that enabling Oculus Rift rendering required only a few additional lines of code.
 
 The following screenshot is showing the Ab3d.DXEngine.OculusWrap.Sample. And as you can see from the the window title and Oculus Performance overlay it has no problems with rendering at 90 FPS and still having plently of performance headroom.
-![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
 Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
