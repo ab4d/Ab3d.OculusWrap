@@ -36,7 +36,7 @@ See below for more info.
 2. Download the latest Oculus SDK for PC Development (https://developer3.oculus.com/downloads/)
 3. Open Ab3d.OculusWrap solution in Visual Studio
 4. Compile the solution. If you do not have Ab3d.DXEngine and Ab3d.PowerToys installed, you will not be able to compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects. But you can still start the Ab3d.OculusWrap.DemoDX11 project with right clicking on the project and then selecting Debug -> Start new instance.
-5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
+5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from https://www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
 
 
 ### Projects in the Ab3d.OculusWrap solution
@@ -69,12 +69,12 @@ The following screenshot is showing the Ab3d.DXEngine.OculusWrap.Sample. And as 
 Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
 To make working with 3D graphics even easier, the Ab3d.DXEngine also fully support the Ab3d.PowerToys library (see below).
-More information about Ab3d.DXEngine can be read on www.ab4d.com/DXEngine.aspx
+More information about Ab3d.DXEngine can be read on https://www.ab4d.com/DXEngine.aspx
 
 Ab3d.PowerToys library is the ultimate helper library for WPF 3D graphics.
 The library contains many helper classes that greatly simply work with 3D graphics.
 It also comes with many samples that can be used to jump-start development.
-More information about the Ab3d.PowerToys library can be read on www.ab4d.com/PowerToys.aspx.
+More information about the Ab3d.PowerToys library can be read on https://www.ab4d.com/PowerToys.aspx.
 
 To compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects, the Ab3d.DXEngine and Ab3d.PowerToys libraries needs to be installed.
-A 60-day evaluation version can be downloaded from www.ab4d.com/Downloads.aspx.
+A 60-day evaluation version can be downloaded from https://www.ab4d.com/Downloads.aspx.
