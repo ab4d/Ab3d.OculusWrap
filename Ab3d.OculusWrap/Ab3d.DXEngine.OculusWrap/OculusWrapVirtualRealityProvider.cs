@@ -338,6 +338,13 @@ namespace Ab3d.DXEngine.OculusWrap
             // Create and add renderingStepsLoop
             base.InitializeRenderingSteps(dxScene);
 
+            if (_resetViewportRenderingStep != null)
+            {
+                dxScene.RenderingSteps.Remove(_resetViewportRenderingStep);
+                _resetViewportRenderingStep.Dispose();
+            }
+
+
             // After both eyes were rendered, we need to reset the Viewport back to full screen
             // This can be done with adding the ChangeBackBufferRenderingStep after the renderingStepsLoop (after both eyes are rendered)
             // ChangeBackBufferRenderingStep is usually used to change current back buffer and its views, but it can be also used to change only Viewport.
@@ -348,7 +355,8 @@ namespace Ab3d.DXEngine.OculusWrap
             dxScene.RenderingSteps.AddAfter(dxScene.DefaultResolveMultisampledBackBufferRenderingStep, _resetViewportRenderingStep);
 
 
-            dxScene.RenderingSteps.Remove(renderingStepsLoop);
+            if (renderingStepsLoop != null)
+                dxScene.RenderingSteps.Remove(renderingStepsLoop);
 
             // We need to call _textureSwapChain.Commit() after image for each eye is rendered
 
@@ -441,7 +449,7 @@ namespace Ab3d.DXEngine.OculusWrap
         /// - Updates the <see cref="VirtualRealityContext.CurrentEye"/> property.<br/>
         /// - Sets the <see cref="RenderingContext.UsedCamera"/> property to a <see cref="StereoscopicCamera"/><br/>
         /// - Calls <see cref="RenderingContext.SetBackBuffer"/> method and sets the new back buffers.<br/>
-        /// - Calls <see cref="ResolveMultisampledBackBufferRenderingStep.DestinationBuffer"/> on the <see cref="DXScene.DefaultResolveMultisampledBackBufferRenderingStep"/>.
+        /// - Updates <see cref="ResolveMultisampledBackBufferRenderingStep.DestinationBuffer"/> on the <see cref="DXScene.DefaultResolveMultisampledBackBufferRenderingStep"/> and sets it to the eye texture.
         /// </para>
         /// </remarks>
         /// <param name="renderingContext">RenderingContext</param>
@@ -645,20 +653,20 @@ namespace Ab3d.DXEngine.OculusWrap
             {
                 DiposeMsaaBuffers();
 
-                if (_eyeTextureSwapChains != null)
-                {
-                    _eyeTextureSwapChains[0].Dispose();
-                    _eyeTextureSwapChains[1].Dispose();
-
-                    _eyeTextureSwapChains = null;
-                }
-
                 if (_mirrorTexture != null)
                 {
                     _mirrorTexture.Dispose();
                     _mirrorTexture = null;
 
                     _mirrorTextureDesc = new MirrorTextureDesc();
+                }
+
+                if (_eyeTextureSwapChains != null)
+                {
+                    _eyeTextureSwapChains[0].Dispose();
+                    _eyeTextureSwapChains[1].Dispose();
+
+                    _eyeTextureSwapChains = null;
                 }
 
                 if (_resetViewportRenderingStep != null)
@@ -669,6 +677,18 @@ namespace Ab3d.DXEngine.OculusWrap
                     _resetViewportRenderingStep.Dispose();
                     _resetViewportRenderingStep = null;
                 }
+
+                if (renderingStepsLoop != null)
+                {
+                    if (parentDXScene != null)
+                        parentDXScene.RenderingSteps.Remove(renderingStepsLoop);
+
+                    renderingStepsLoop.Dispose();
+                    renderingStepsLoop = null;
+                }
+
+                if (parentDXScene != null)
+                    parentDXScene.DefaultResolveMultisampledBackBufferRenderingStep.DestinationBuffer = null; // Set to previous value
             }
 
             base.Dispose(isDisposing);
