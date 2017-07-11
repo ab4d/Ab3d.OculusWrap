@@ -458,9 +458,23 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
         }
 
 
+        private void DisposeOculusRiftVirtualRealityProvider()
+        {
+            if (_dxViewportView != null && _dxViewportView.DXScene != null)
+                _dxViewportView.DXScene.InitializeVirtualRealityRendering(null); // Disable virtual reality rendering
+
+            if (_oculusRiftVirtualRealityProvider != null)
+            {
+                _oculusRiftVirtualRealityProvider.Dispose();
+                _oculusRiftVirtualRealityProvider = null;
+            }
+
+            _ovr = null;
+        }
+
         private void Dispose()
         {
-            _ovr = null;
+            DisposeOculusRiftVirtualRealityProvider();
 
             if (_dxViewportView != null)
             {
