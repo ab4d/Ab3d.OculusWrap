@@ -688,7 +688,7 @@ namespace Ab3d.OculusWrap
             /// Returns defaultVal if the property doesn't exist.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetBool", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetBool", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_GetBool(IntPtr sessionPtr, string propertyName, Byte defaultVal);
 
             /// <summary>
@@ -709,7 +709,7 @@ namespace Ab3d.OculusWrap
             /// A false result should only occur if the property name is empty or if the property is read-only.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_SetBool", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetBool", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_SetBool(IntPtr sessionPtr, string propertyName, Byte value);
 
             /// <summary>
@@ -729,7 +729,7 @@ namespace Ab3d.OculusWrap
             /// Returns defaultVal if the property doesn't exist.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetInt", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetInt", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ovr_GetInt(IntPtr sessionPtr, string propertyName, int defaultVal);
 
             /// <summary>
@@ -751,7 +751,7 @@ namespace Ab3d.OculusWrap
             /// A false result should only occur if the property name is empty or if the property is read-only.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_SetInt", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetInt", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_SetInt(IntPtr sessionPtr, string propertyName, int value);
 
             /// <summary>
@@ -771,7 +771,7 @@ namespace Ab3d.OculusWrap
             /// Returns defaultVal if the property doesn't exist.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetFloat", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetFloat", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern float ovr_GetFloat(IntPtr sessionPtr, string propertyName, float defaultVal);
 
             /// <summary>
@@ -793,7 +793,7 @@ namespace Ab3d.OculusWrap
             /// A false result should only occur if the property name is empty or if the property is read-only.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_SetFloat", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetFloat", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_SetFloat(IntPtr sessionPtr, string propertyName, float value);
 
             /// <summary>
@@ -815,7 +815,7 @@ namespace Ab3d.OculusWrap
             /// Returns the number of elements read, or 0 if property doesn't exist or is empty.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetFloatArray", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetFloatArray", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ovr_GetFloatArray(IntPtr sessionPtr, string propertyName, [MarshalAs(UnmanagedType.LPArray)] float[] values, int valuesCapacity);
 
             /// <summary>
@@ -838,7 +838,7 @@ namespace Ab3d.OculusWrap
             /// A false result should only occur if the property name is empty or if the property is read-only.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_SetFloatArray", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetFloatArray", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_SetFloatArray(IntPtr sessionPtr, string propertyName, [MarshalAs(UnmanagedType.LPArray)] float[] values, int valuesSize);
 
             /// <summary>
@@ -862,7 +862,7 @@ namespace Ab3d.OculusWrap
             /// until the HMD is destroyed, whichever occurs first.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetString", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetString", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern IntPtr ovr_GetString(IntPtr sessionPtr, string propertyName, string defaultVal);
 
             /// <summary>
@@ -884,7 +884,7 @@ namespace Ab3d.OculusWrap
             /// A false result should only occur if the property name is empty or if the property is read-only.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_SetString", SetLastError = false, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetString", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Byte ovr_SetString(IntPtr sessionPtr, string propertyName, string value);
 
             /// <summary>
@@ -1239,7 +1239,7 @@ namespace Ab3d.OculusWrap
             /// ovr_GetLastErrorInfo to get more information.
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_IdentifyClient", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_IdentifyClient", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Result ovr_IdentifyClient(string identity);
 
             /// <summary>

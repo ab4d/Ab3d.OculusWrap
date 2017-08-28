@@ -1562,7 +1562,7 @@ namespace Ab3d.OculusWrap
             /// <remarks>
             /// This method is used to load the DllOVR.dll into memory, before calling any of it's DllImported methods.
             /// </remarks>
-            [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
+            [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
             public static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
             /// <summary>
