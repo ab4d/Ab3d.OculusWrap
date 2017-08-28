@@ -153,6 +153,21 @@ namespace Ab3d.OculusWrap
         /// Function call is invalid for object's current state
         /// </summary>
         InvalidOperation = -1015,
+
+        /// <summary>
+        /// Increase size of output array
+        /// </summary>
+        ovrError_InsufficientArraySize = -1016,
+
+        /// <summary>
+        /// There is not any external camera information stored by ovrServer.
+        /// </summary>
+        ovrError_NoExternalCameraInfo = -1017,
+
+        /// <summary>
+        /// Tracking is lost when ovr_GetDevicePoses() is called.
+        /// </summary>
+        ovrError_LostTracking = -1018,
         #endregion
 
         #region Audio error range, reserved for Audio errors.
@@ -301,7 +316,12 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Failed to connect to the service because remote connections to the service are not allowed.
         /// </summary>
-        RemoteSession = -3024,   
+        RemoteSession = -3024,
+
+        /// <summary>
+        /// Vulkan initialization error.
+        /// </summary>
+        ovrError_InitializeVulkan = -3025,
 
         #endregion
 
