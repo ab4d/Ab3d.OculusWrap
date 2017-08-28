@@ -31,9 +31,7 @@ namespace Ab3d.OculusWrap
     {
         internal const string _ovrDllName = "LibOVRRT32_1.dll";
 
-        /// <summary>
-        /// Filename of the DllOVR wrapper file, which wraps the LibOvr.lib in a dll.
-        /// </summary>
+        /// <inheritdoc />
         public override string OvrDllName { get { return _ovrDllName; } }
 
         // OvrWrap32 can be created only from static OvrWrap.Create or OvrWrap.Create32 methods
@@ -42,19 +40,7 @@ namespace Ab3d.OculusWrap
         }
 
 
-        /// <summary>
-        /// Returns information about the current HMD.
-        /// 
-        /// Initialize must have first been called in order for this to succeed, otherwise HmdDesc.Type
-        /// will be reported as None.
-        /// </summary>
-        /// <param name="sessionPtr">
-        /// Specifies an IntPtr previously returned by Create, else NULL in which
-        /// case this function detects whether an HMD is present and returns its info if so.
-        /// </param>
-        /// <returns>
-        /// Returns an ovrHmdDesc. If the hmd is null and ovrHmdDesc::Type is None then no HMD is present.
-        /// </returns>
+        /// <inheritdoc />
         public override HmdDesc GetHmdDesc(IntPtr sessionPtr)
         {
             HmdDesc hmdDesc;

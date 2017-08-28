@@ -856,7 +856,7 @@ namespace Ab3d.OculusWrap
         /// The name of the property, which needs to be valid for only the call.
         /// </param>
         /// <param name="defaultValue">
-        /// Specifes the value to return if the property couldn't be read.
+        /// Specifies the value to return if the property couldn't be read.
         /// </param>
         /// <returns>
         /// Returns the property interpreted as a boolean value. 
@@ -931,7 +931,7 @@ namespace Ab3d.OculusWrap
         /// The name of the property, which needs to be valid for only the call.
         /// </param>
         /// <param name="defaultValue">
-        /// Specifes the value to return if the property couldn't be read.
+        /// Specifies the value to return if the property couldn't be read.
         /// </param>
         /// <returns>
         /// Returns the property interpreted as an float value. 
@@ -1011,7 +1011,7 @@ namespace Ab3d.OculusWrap
         /// The name of the property, which needs to be valid for only the call.
         /// </param>
         /// <param name="defaultValue">
-        /// Specifes the value to return if the property couldn't be read.
+        /// Specifies the value to return if the property couldn't be read.
         /// </param>
         /// <returns>
         /// Returns the string property if it exists. 

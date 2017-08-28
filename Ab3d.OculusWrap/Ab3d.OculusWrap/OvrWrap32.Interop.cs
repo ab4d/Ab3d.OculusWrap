@@ -117,7 +117,7 @@ namespace Ab3d.OculusWrap
             /// Returns the length of the message, or -1 if message is too large
             /// </returns>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_TraceMessage", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_TraceMessage", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ovr_TraceMessage(int level, string message);
 
             /// <summary>
