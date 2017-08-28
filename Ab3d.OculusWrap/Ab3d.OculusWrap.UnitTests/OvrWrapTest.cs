@@ -104,7 +104,7 @@ namespace Ab3d.OculusWrap.UnitTests
 		[TestMethod]
 		public void TraceMessage()
 		{
-			string message = "OculusWrapTest.TraceMessage unit test method ran successfully.";
+			string message = "OculusWrapTest.TraceMessage unit test method ran successfully ščćžŠČĆŽ€ß¤.";
 
 			int length = OVR.TraceMessage(LogLevel.Info, message);
 			Assert.AreEqual(message.Length, length);

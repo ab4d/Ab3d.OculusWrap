@@ -35,4 +35,4 @@ using System.Runtime.InteropServices;
 
 // Major.Minor.Build version are the same as supported Oculus SDK version
 // Revision number is version of this assembly and is incrementing on each official release of this library (one Oculus SDK version can have multiple Ab3d.OculusWrap versions)
-[assembly: AssemblyVersion("1.10.1.2")]
+[assembly: AssemblyVersion("1.17.2.1")]
