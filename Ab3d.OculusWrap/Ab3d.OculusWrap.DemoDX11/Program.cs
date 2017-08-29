@@ -99,8 +99,8 @@ namespace Ab3d.OculusWrap.DemoDX11
 				// Create DirectX drawing device.
 				SharpDX.Direct3D11.Device device = new Device(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.Debug);
 
-				// Create DirectX Graphics Interface factory, used to create the swap chain.
-				factory = new Factory();
+                // Create DirectX Graphics Interface factory, used to create the swap chain.
+                factory = new SharpDX.DXGI.Factory4();
 
 				immediateContext = device.ImmediateContext;
 
@@ -119,8 +119,8 @@ namespace Ab3d.OculusWrap.DemoDX11
 				swapChainDescription.ModeDescription.RefreshRate.Numerator		= 0;
 				swapChainDescription.ModeDescription.RefreshRate.Denominator	= 1;
 
-				// Create the swap chain.
-				swapChain	= new SwapChain(factory, device, swapChainDescription);
+                // Create the swap chain.
+                swapChain = new SwapChain(factory, device, swapChainDescription);
 
 				// Retrieve the back buffer of the swap chain.
 				backBuffer					= swapChain.GetBackBuffer<Texture2D>(0);	
