@@ -68,5 +68,11 @@ namespace Ab3d.OculusWrap
         /// </summary>
         [MarshalAs(UnmanagedType.U1)]
         public bool ShouldRecenter;
+
+        [MarshalAs(UnmanagedType.U1)]
+        public bool Internal0;
+
+        [MarshalAs(UnmanagedType.U1)]
+        public bool Internal1;
     }
 }

@@ -37,8 +37,8 @@ namespace Ab3d.OculusWrap
         None = 0,
 
         /// <summary>
-        /// DX only: The underlying texture is created with a TYPELESS equivalent of the
-        /// format specified in the texture desc. The SDK will still access the
+        /// Vulkan and DX only: The underlying texture is created with a TYPELESS equivalent
+        /// of the format specified in the texture desc. The SDK will still access the
         /// texture using the format specified in the texture desc, but the app can
         /// create views with different formats if this is specified.
         /// </summary>

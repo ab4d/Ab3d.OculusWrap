@@ -31,6 +31,11 @@ namespace Ab3d.OculusWrap
     public enum TrackedDeviceType
     {
         /// <summary>
+        /// None
+        /// </summary>
+        None = 0x0000,
+
+        /// <summary>
         /// HMD
         /// </summary>
         HMD = 0x0001,
@@ -48,6 +53,11 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Touch
         /// </summary>
-        Touch = 0x0006,
+        Touch = LTouch | RTouch,
+
+        Object0 = 0x0010,
+        Object1 = 0x0020,
+        Object2 = 0x0040,
+        Object3 = 0x0080,
     }
 }

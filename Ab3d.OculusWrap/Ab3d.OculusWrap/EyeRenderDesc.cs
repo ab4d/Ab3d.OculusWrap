@@ -54,9 +54,15 @@ namespace Ab3d.OculusWrap
         /// </summary>
         public Vector2f	PixelsPerTanAngleAtCenter;
 
+        // Before version 1.17 the EyeRenderDesc contained HmdToEyeOffset instead of HmdToEyePose
+        ///// <summary>
+        ///// Translation of each eye, in meters.
+        ///// </summary>
+        //public Vector3f	HmdToEyeOffset;
+
         /// <summary>
-        /// Translation of each eye, in meters.
+        /// Transform of eye from the HMD center, in meters.
         /// </summary>
-        public Vector3f	HmdToEyeOffset;
+        public Posef HmdToEyePose;
     }
 }

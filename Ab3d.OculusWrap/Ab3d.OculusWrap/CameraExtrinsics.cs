@@ -17,56 +17,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
-// Based on OculusWrap project created by MortInfinite and licensed as Ms-PL (https://oculuswrap.codeplex.com/)
-
-using System;
 
 namespace Ab3d.OculusWrap
 {
-    /// <summary>
-    /// Specifies which controller is connected; multiple can be connected at once.
-    /// </summary>
-    [Flags]
-    public enum ControllerType : uint
+    public struct CameraExtrinsics
     {
         /// <summary>
-        /// None
+        /// Time in seconds from last change to the parameters.
+        /// For instance, if the pose changes, or a camera exposure happens, this struct will be updated.
         /// </summary>
-        None = 0x00,
+        public double LastChangedTimeSeconds;
 
         /// <summary>
-        /// LTouch
+        /// Current Status of the camera, a mix of bits from ovrCameraStatusFlags
         /// </summary>
-        LTouch = 0x01,
+        public uint CameraStatusFlags;
 
         /// <summary>
-        /// RTouch
+        /// Which Tracked device, if any, is the camera rigidly attached to
+        /// If set to ovrTrackedDevice_None, then the camera is not attached to a tracked object.
+        /// If the external camera moves while unattached (i.e. set to ovrTrackedDevice_None), its Pose
+        /// won't be updated
         /// </summary>
-        RTouch = 0x02,
+        public TrackedDeviceType AttachedToDevice;
 
         /// <summary>
-        /// Touch
+        /// The relative Pose of the External Camera.
+        /// If AttachedToDevice is ovrTrackedDevice_None, then this is a absolute pose in tracking space
         /// </summary>
-        Touch = LTouch | RTouch,
-        
-        /// <summary>
-        /// Remote
-        /// </summary>
-        Remote = 0x04,
+        public Posef RelativePose;
 
         /// <summary>
-        /// XBox
+        /// The time, in seconds, when the last successful exposure was taken
         /// </summary>
-        XBox = 0x10,
+        public double LastExposureTimeSeconds;
 
-        ovrControllerType_Object0 = 0x0100,
-        ovrControllerType_Object1 = 0x0200,
-        ovrControllerType_Object2 = 0x0400,
-        ovrControllerType_Object3 = 0x0800,
-
-        /// <summary>Operate on or query whichever controller is active.Operate on or query whichever controller is active.
+        /// <summary>
+        /// Estimated exposure latency to get from the exposure time to the system
         /// </summary>
-        Active = (uint)0xffffffff
+        public double ExposureLatencySeconds;
+
+        /// <summary>
+        /// Additional latency to get from the exposure time of the real camera to match the render time
+        /// of the virtual camera
+        /// </summary>
+        public double AdditionalLatencySeconds;
     }
 }

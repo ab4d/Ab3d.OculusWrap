@@ -44,11 +44,14 @@
     <Compile Include="BoundaryTestResult.cs" />
     <Compile Include="BoundaryType.cs" />
     <Compile Include="Button.cs" />
+    <Compile Include="CameraExtrinsics.cs" />
+    <Compile Include="CameraStatusFlags.cs" />
     <Compile Include="Colorf.cs" />
     <Compile Include="ControllerType.cs" />
     <Compile Include="DebugHudStereoMode.cs" />
     <Compile Include="DetectResult.cs" />
     <Compile Include="ErrorInfo.cs" />
+    <Compile Include="ExternalCamera.cs" />
     <Compile Include="EyeRenderDesc.cs" />
     <Compile Include="EyeType.cs" />
     <Compile Include="FovPort.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="SessionStatus.cs" />
     <Compile Include="Sizei.cs" />
     <Compile Include="StatusBits.cs" />
+    <Compile Include="CameraIntrinsics.cs" />
     <Compile Include="TextureBindFlags.cs" />
     <Compile Include="TextureFormat.cs" />
     <Compile Include="TextureMiscFlags.cs" />

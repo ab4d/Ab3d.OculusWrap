@@ -100,7 +100,14 @@ namespace Ab3d.OculusWrap
         public const int OVR_AUDIO_MAX_DEVICE_STR_SIZE = 128;
         #endregion
 
-        #pragma warning restore 1591
+        #region Definitions in OVR_CAPI
+        public const int OVR_HAPTICS_BUFFER_SAMPLES_MAX = 256; // Maximum number of samples in ovrHapticsBuffer
+
+        public const int OVR_EXTERNAL_CAMERA_NAME_SIZE = 32;
+
+        #endregion
+
+#pragma warning restore 1591
 
         /// <summary>
         /// Specifies the maximum number of layers supported by ovr_SubmitFrame.
@@ -231,6 +238,20 @@ namespace Ab3d.OculusWrap
         }
         #endregion
 
+        internal static string GetAsciiString(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+                return null;
+
+            string result = System.Text.Encoding.ASCII.GetString(bytes);
+
+            int pos = result.IndexOf('\0'); // Clean all chars after the '\0' Note: TrimEnd('\0') does not work when there are some other characters after the '\0'
+            if (pos >= 0)
+                result = result.Substring(0, pos);
+
+            return result;
+        }
+
         #region Oculus SDK methods
         /// <summary>
         /// Detects Oculus Runtime and Device Status
@@ -317,15 +338,16 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Returns information about the current HMD.
         /// 
-        /// Initialize must have first been called in order for this to succeed, otherwise HmdDesc.Type
-        /// will be reported as None.
+        /// ovr_Initialize must be called prior to calling this function,
+        /// otherwise ovrHmdDesc::Type will be set to ovrHmd_None without
+        /// checking for the HMD presence.
         /// </summary>
         /// <param name="sessionPtr">
-        /// Specifies an IntPtr previously returned by Create, else NULL in which
-        /// case this function detects whether an HMD is present and returns its info if so.
+        /// Specifies an ovrSession previously returned by ovr_Create() or NULL.
         /// </param>
         /// <returns>
-        /// Returns an ovrHmdDesc. If the hmd is null and ovrHmdDesc::Type is None then no HMD is present.
+        /// Returns an ovrHmdDesc. If invoked with NULL session argument, ovrHmdDesc::Type
+        /// set to ovrHmd_None indicates that the HMD is not connected.
         /// </returns>
         public abstract HmdDesc GetHmdDesc(IntPtr sessionPtr);
 
@@ -336,8 +358,8 @@ namespace Ab3d.OculusWrap
         /// as opposed to once on startup.
         /// </summary>
         /// <param name="sessionPtr">Specifies an IntPtr previously returned by Create.</param>
-        /// <returns>Returns unsigned int count.</returns>
-        public abstract uint GetTrackerCount(IntPtr sessionPtr);
+        /// <returns>Returns the number of sensors.</returns>
+        public abstract int GetTrackerCount(IntPtr sessionPtr);
 
         /// <summary>
         /// Returns a given sensor description.
@@ -436,7 +458,11 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Re-centers the sensor position and orientation.
         ///
-        /// This resets the (x,y,z) positional components and the yaw orientation component.
+        /// This resets the (x,y,z) positional components and the yaw orientation component of the
+        /// tracking space for the HMD and controllers using the HMD's current tracking pose.
+        /// If the caller requires some tweaks on top of the HMD's current tracking pose, consider using
+        /// ovr_SpecifyTrackingOrigin instead.
+        /// 
         /// The Roll and pitch orientation components are always determined by gravity and cannot
         /// be redefined. All future tracking will report values relative to this new reference position.
         /// If you are using ovrTrackerPoses then you will need to call GetTrackerPose after 
@@ -461,11 +487,56 @@ namespace Ab3d.OculusWrap
         public abstract Result RecenterTrackingOrigin(IntPtr sessionPtr);
 
         /// <summary>
-        /// Clears the ShouldRecenter status bit in IntPtrStatus.
+        /// Allows manually tweaking the sensor position and orientation.
         ///
-        /// Clears the ShouldRecenter status bit in IntPtrStatus, allowing further recenter 
-        /// requests to be detected. Since this is automatically done by RecenterTrackingOrigin,
-        /// this is only needs to be called when application is doing its own re-centering.
+        /// This function is similar to ovr_RecenterTrackingOrigin in that it modifies the
+        /// (x,y,z) positional components and the yaw orientation component of the tracking space for
+        /// the HMD and controllers.
+        ///
+        /// While ovr_RecenterTrackingOrigin resets the tracking origin in reference to the HMD's
+        /// current pose, ovr_SpecifyTrackingOrigin allows the caller to explicitly specify a transform
+        /// for the tracking origin. This transform is expected to be an offset to the most recent
+        /// recentered origin, so calling this function repeatedly with the same originPose will keep
+        /// nudging the recentered origin in that direction.
+        ///
+        /// There are several use cases for this function. For example, if the application decides to
+        /// limit the yaw, or translation of the recentered pose instead of directly using the HMD pose
+        /// the application can query the current tracking state via ovr_GetTrackingState, and apply
+        /// some limitations to the HMD pose because feeding this pose back into this function.
+        /// Similarly, this can be used to "adjust the seating position" incrementally in apps that
+        /// feature seated experiences such as cockpit-based games.
+        ///
+        /// This function can emulate ovr_RecenterTrackingOrigin as such:
+        ///     ovrTrackingState ts = ovr_GetTrackingState(session, 0.0, ovrFalse);
+        ///     ovr_SpecifyTrackingOrigin(session, ts.HeadPose.ThePose);
+        ///
+        /// The roll and pitch orientation components are determined by gravity and cannot be redefined.
+        /// If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose after
+        /// this, because the sensor position(s) will change as a result of this.
+        ///
+        /// For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
+        /// recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
+        /// </summary>
+        /// <param name="sessionPtr">Specifies an IntPtr previously returned by Create.</param>
+        /// <param name="originPose">originPose Specifies a pose that will be used to transform the current tracking origin.</param>
+        /// <returns>
+        /// Returns an ovrResult indicating success or failure. In the case of failure, use
+        /// ovr_GetLastErrorInfo to get more information. Return values include but aren't limited to:
+        /// - ovrSuccess: Completed successfully.
+        /// - ovrError_InvalidParameter: The heading direction in originPose was invalid,
+        /// such as facing vertically. This can happen if the caller is directly feeding the pose
+        /// of a position-tracked device such as an HMD or controller into this function.
+        /// </returns>
+        public abstract Result SpecifyTrackingOrigin(IntPtr sessionPtr, Posef originPose);
+
+
+        /// <summary>
+        /// Clears the ShouldRecenter status bit in ovrSessionStatus.
+        ///
+        /// Clears the ShouldRecenter status bit in ovrSessionStatus, allowing further recenter requests to
+        /// be detected. Since this is automatically done by ovr_RecenterTrackingOrigin and
+        /// ovr_SpecifyTrackingOrigin, this function only needs to be called when application is doing
+        /// its own re-centering logic.
         /// </summary>
         /// <param name="sessionPtr">Specifies an IntPtr previously returned by Create.</param>
         public abstract void ClearShouldRecenterFlag(IntPtr sessionPtr);
@@ -525,6 +596,15 @@ namespace Ab3d.OculusWrap
         /// <see cref="GetEyePoses"/>
         /// <see cref="GetTimeInSeconds"/>
         public abstract TrackingState GetTrackingState(IntPtr sessionPtr, double absTime, bool latencyMarker);
+
+        /// Returns an array of poses, where each pose matches a device type provided by the deviceTypes
+        /// array parameter.
+        /// <param name="sessionPtr">Specifies an ovrSession previously returned by ovr_Create.</param>
+        /// <param name="deviceTypes">Array of device types to query for their poses.</param>
+        /// <param name="absTime">Specifies the absolute future time to predict the return ovrTrackingState value. Use 0 to request the most recent tracking state.</param>
+        /// <param name="outDevicePoses">Array of poses, one for each device type in deviceTypes arrays (size must match the size of deviceTypes array).</param>
+        /// <returns>Returns an ovrResult for which OVR_SUCCESS(result) is false upon error and true upon success.</returns>
+        public abstract Result GetDevicePoses(IntPtr sessionPtr, TrackedDeviceType[] deviceTypes, double absTime, PoseStatef[] outDevicePoses);
 
         /// <summary>
         /// Turns on vibration of the given controller.
@@ -1513,15 +1593,30 @@ namespace Ab3d.OculusWrap
         public abstract Result RequestBoundaryVisible(IntPtr sessionPtr, bool visible);
 
         ///  <summary>
-        ///  Retrieves performance stats for the VR app as well as the SDK compositor.
-        /// 
-        ///  If the app calling this function is not the one in focus (i.e. not visible in the HMD), then
-        ///  stats will be zero'd out.
-        ///  New stats are populated after each successive call to ovr_SubmitFrame. So the app should call
-        ///  this function on the same thread it calls ovr_SubmitFrame, preferably immediately
-        ///  afterwards.
-        ///  </summary>
-        ///  <param name="sessionPtr">Specifies an IntPtr previously returned by ovr_Create.</param>
+        /// Retrieves performance stats for the VR app as well as the SDK compositor.
+        ///
+        /// This function will return stats for the VR app that is currently visible in the HMD
+        /// regardless of what VR app is actually calling this function.
+        ///
+        /// If the VR app is trying to make sure the stats returned belong to the same application,
+        /// the caller can compare the VisibleProcessId with their own process ID. Normally this will
+        /// be the case if the caller is only calling ovr_GetPerfStats when ovr_GetSessionStatus has
+        /// IsVisible flag set to be true.
+        ///
+        /// If the VR app calling ovr_GetPerfStats is actually the one visible in the HMD,
+        /// then new perf stats will only be populated after a new call to ovr_SubmitFrame.
+        /// That means subsequent calls to ovr_GetPerfStats after the first one without calling
+        /// ovr_SubmitFrame will receive a FrameStatsCount of zero.
+        ///
+        /// If the VR app is not visible, or was initially marked as ovrInit_Invisible, then each call
+        /// to ovr_GetPerfStats will immediately fetch new perf stats from the compositor without
+        /// a need for the ovr_SubmitFrame call.
+        ///
+        /// Even though invisible VR apps do not require ovr_SubmitFrame to be called to gather new
+        /// perf stats, since stats are generated at the native refresh rate of the HMD (i.e. 90 Hz
+        /// for CV1), calling it at a higher rate than that would be unnecessary.
+        /// </summary>
+        /// <param name="sessionPtr">Specifies an IntPtr previously returned by ovr_Create.</param>
         /// <param name="stats">Contains the performance stats for the application and SDK compositor</param>
         /// <returns>
         ///  Returns an ovrResult for which OVR_SUCCESS(result) is false upon error and true
@@ -1548,6 +1643,29 @@ namespace Ab3d.OculusWrap
         /// <seealso cref="PerfStatsPerCompositorFrame"/>  
         /// <seealso cref="GetPerfStats"/>          
         public abstract Result ResetPerfStats(IntPtr sessionPtr);
+
+
+        // Mixed reality capture support
+        // Defines functions used for mixed reality capture / third person cameras.
+
+        /// <summary>
+        /// Returns the number of camera properties of all cameras
+        /// </summary>
+        /// <param name="sessionPtr">session Specifies an ovrSession previously returned by ovr_Create.</param>
+        /// <param name="cameras"></param>
+        /// <returns>Returns the ids of external cameras the system knows about. Returns ovrError_NoExternalCameraInfo if there is not any eternal camera information.</returns>
+        public abstract Result GetExternalCameras(IntPtr sessionPtr, out ExternalCamera[] cameras);
+
+        /// <summary>
+        /// Sets the camera intrinsics and/or extrinsics stored for the cameraName camera Names must be less then 32 characters and null-terminated.
+        /// </summary>
+        /// <param name="sessionPtr">session Specifies an ovrSession previously returned by ovr_Create.</param>
+        /// <param name="name">Specifies which camera to set the intrinsics or extrinsics for</param>
+        /// <param name="intrinsics">Contains the intrinsic parameters to set, can be null</param>
+        /// <param name="extrinsics">Contains the extrinsic parameters to set, can be null</param>
+        /// <returns>Returns ovrSuccess or an ovrError code</returns>
+        public abstract Result SetExternalCameraProperties(IntPtr sessionPtr, string name, ref CameraIntrinsics intrinsics, ref CameraExtrinsics extrinsics);
+
         #endregion
 
         #region Kernel32 Platform invoke methods

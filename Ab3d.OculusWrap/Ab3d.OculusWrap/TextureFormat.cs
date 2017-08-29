@@ -38,17 +38,17 @@ namespace Ab3d.OculusWrap
         Unknown = 0,
 
         /// <summary>
-        /// Not currently supported on PC. Would require a DirectX 11.1 device.
+        /// Not currently supported on PC. Requires a DirectX 11.1 device.
         /// </summary>
         B5G6R5_UNorm = 1,
 
         /// <summary>
-        /// Not currently supported on PC. Would require a DirectX 11.1 device.
+        /// Not currently supported on PC. Requires a DirectX 11.1 device.
         /// </summary>
         B5G5R5A1_UNorm = 2,
 
         /// <summary>
-        /// Not currently supported on PC. Would require a DirectX 11.1 device.
+        /// Not currently supported on PC. Requires a DirectX 11.1 device.
         /// </summary>
         B4G4R4A4_UNorm = 3,
 

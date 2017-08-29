@@ -17,37 +17,49 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
-// Based on OculusWrap project created by MortInfinite and licensed as Ms-PL (https://oculuswrap.codeplex.com/)
 
 namespace Ab3d.OculusWrap
 {
-    /// <summary>
-    /// The type of texture resource.
-    /// </summary>
-    /// <see cref="TextureSwapChainDesc"/>
-    public enum TextureType
+    public struct CameraIntrinsics
     {
         /// <summary>
-        /// 2D textures.
+        /// Time in seconds from last change to the parameters
         /// </summary>
-        Texture2D,
+        public double LastChangedTime;
 
         /// <summary>
-        /// External 2D texture. 
-        /// 
-        /// Not used on PC.
+        /// Angles of all 4 sides of viewport
         /// </summary>
-        Texture2DExternal,
+        public FovPort FOVPort;
 
         /// <summary>
-        /// Cube maps. ovrTextureSwapChainDesc::ArraySize must be 6 for this type.
+        /// Near plane of the virtual camera used to match the external camera
         /// </summary>
-        TextureCube,
+        public float VirtualNearPlaneDistanceMeters;
 
         /// <summary>
-        /// Undocumented.
+        /// Far plane of the virtual camera used to match the external camera
         /// </summary>
-        TextureCount,
+        public float VirtualFarPlaneDistanceMeters;
+
+        /// <summary>
+        /// Height in pixels of image sensor
+        /// </summary>
+        public Sizei ImageSensorPixelResolution;
+
+        /// <summary>
+        /// The lens distortion matrix of camera
+        /// </summary>
+        public Matrix4f LensDistortionMatrix;
+
+        /// <summary>
+        /// How often, in seconds, the exposure is taken
+        /// </summary>
+        public double ExposurePeriodSeconds;
+
+        /// <summary>
+        /// length of the exposure time
+        /// </summary>
+        public double ExposureDurationSeconds;
     }
 }

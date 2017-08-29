@@ -56,7 +56,7 @@ namespace Ab3d.OculusWrap.DemoDX11
             // Define initialization parameters with debug flag.
             InitParams initializationParameters = new InitParams();
 			initializationParameters.Flags = InitFlags.Debug | InitFlags.RequestVersion;
-            initializationParameters.RequestedMinorVersion = 10;
+            initializationParameters.RequestedMinorVersion = 17;
 
             // Initialize the Oculus runtime.
             string errorReason = null;
@@ -176,7 +176,7 @@ namespace Ab3d.OculusWrap.DemoDX11
 					eyeTexture.FieldOfView				= hmdDesc.DefaultEyeFov[eyeIndex];
 					eyeTexture.TextureSize				= OVR.GetFovTextureSize(sessionPtr, eye, hmdDesc.DefaultEyeFov[eyeIndex], 1.0f);
 					//eyeTexture.RenderDescription		= hmd.GetRenderDesc(eye, hmd.DefaultEyeFov[eyeIndex]);
-					eyeTexture.HmdToEyeViewOffset		= eyeTexture.RenderDescription.HmdToEyeOffset;
+					eyeTexture.HmdToEyeViewOffset		= eyeTexture.RenderDescription.HmdToEyePose.Position;
 					eyeTexture.ViewportSize.Position	= new Vector2i(0, 0);
 					eyeTexture.ViewportSize.Size		= eyeTexture.TextureSize;
 					eyeTexture.Viewport					= new Viewport(0, 0, eyeTexture.TextureSize.Width, eyeTexture.TextureSize.Height, 0.0f, 1.0f);
@@ -321,8 +321,8 @@ namespace Ab3d.OculusWrap.DemoDX11
 				immediateContext.PixelShader.Set(pixelShader);
 				#endregion
 
-				DateTime	startTime	= DateTime.Now;
-				Vector3		position	= new Vector3(0, 0, -1);
+				DateTime startTime = DateTime.Now;
+				Vector3  position  = new Vector3(0, 0, -1);
 
 				#region Render loop
 				RenderLoop.Run(form, () =>
@@ -335,12 +335,12 @@ namespace Ab3d.OculusWrap.DemoDX11
 					// Calculate the position and orientation of each eye.
 					OVR.CalcEyePoses(trackingState.HeadPose.ThePose, hmdToEyeViewOffsets, ref eyePoses);
 
-					float timeSinceStart = (float) (DateTime.Now-startTime).TotalSeconds;
+					float timeSinceStart = (float)(DateTime.Now - startTime).TotalSeconds;
 
-					for(int eyeIndex=0; eyeIndex<2; eyeIndex++)
+					for(int eyeIndex = 0; eyeIndex < 2; eyeIndex ++)
 					{
-						EyeType eye	= (EyeType) eyeIndex;
-						EyeTexture	eyeTexture	= eyeTextures[eyeIndex];
+						EyeType eye	= (EyeType)eyeIndex;
+						EyeTexture eyeTexture = eyeTextures[eyeIndex];
 
                         if (eyeIndex == 0)
 						    layerEyeFov.RenderPoseLeft = eyePoses[0];
@@ -348,7 +348,7 @@ namespace Ab3d.OculusWrap.DemoDX11
                             layerEyeFov.RenderPoseRight = eyePoses[1];
 
                         // Update the render description at each frame, as the HmdToEyeOffset can change at runtime.
-                        eyeTexture.RenderDescription		= OVR.GetRenderDesc(sessionPtr, eye, hmdDesc.DefaultEyeFov[eyeIndex]);
+                        eyeTexture.RenderDescription = OVR.GetRenderDesc(sessionPtr, eye, hmdDesc.DefaultEyeFov[eyeIndex]);
 
 						// Retrieve the index of the active texture
 						int textureIndex;
@@ -361,20 +361,20 @@ namespace Ab3d.OculusWrap.DemoDX11
 						immediateContext.Rasterizer.SetViewport(eyeTexture.Viewport);
 
 						// Retrieve the eye rotation quaternion and use it to calculate the LookAt direction and the LookUp direction.
-						Quaternion	rotationQuaternion	= SharpDXHelpers.ToQuaternion(eyePoses[eyeIndex].Orientation);
-						Matrix		rotationMatrix		= Matrix.RotationQuaternion(rotationQuaternion);
-						Vector3		lookUp				= Vector3.Transform(new Vector3(0, -1, 0), rotationMatrix).ToVector3();
-						Vector3		lookAt				= Vector3.Transform(new Vector3(0, 0, 1), rotationMatrix).ToVector3();
+						Quaternion rotationQuaternion = SharpDXHelpers.ToQuaternion(eyePoses[eyeIndex].Orientation);
+						Matrix     rotationMatrix     = Matrix.RotationQuaternion(rotationQuaternion);
+						Vector3    lookUp             = Vector3.Transform(new Vector3(0, -1, 0), rotationMatrix).ToVector3();
+						Vector3    lookAt             = Vector3.Transform(new Vector3(0, 0, 1), rotationMatrix).ToVector3();
 
-						Vector3		viewPosition		= position - eyePoses[eyeIndex].Position.ToVector3();
+						Vector3    viewPosition       = position - eyePoses[eyeIndex].Position.ToVector3();
 
-						Matrix world				= Matrix.Scaling(0.1f) * Matrix.RotationX(timeSinceStart/10f) * Matrix.RotationY(timeSinceStart*2/10f) * Matrix.RotationZ(timeSinceStart*3/10f);
-                        Matrix viewMatrix			= Matrix.LookAtLH(viewPosition, viewPosition+lookAt, lookUp); 
+						Matrix world      = Matrix.Scaling(0.1f) * Matrix.RotationX(timeSinceStart/10f) * Matrix.RotationY(timeSinceStart*2/10f) * Matrix.RotationZ(timeSinceStart*3/10f);
+                        Matrix viewMatrix = Matrix.LookAtLH(viewPosition, viewPosition+lookAt, lookUp); 
 
-						Matrix projectionMatrix		= OVR.Matrix4f_Projection(eyeTexture.FieldOfView, 0.1f, 100.0f, ProjectionModifier.LeftHanded).ToMatrix();
+						Matrix projectionMatrix = OVR.Matrix4f_Projection(eyeTexture.FieldOfView, 0.1f, 100.0f, ProjectionModifier.LeftHanded).ToMatrix();
 						projectionMatrix.Transpose();
 
-						Matrix worldViewProjection	= world * viewMatrix * projectionMatrix;
+						Matrix worldViewProjection = world * viewMatrix * projectionMatrix;
 						worldViewProjection.Transpose();
 
 						// Update the transformation matrix.

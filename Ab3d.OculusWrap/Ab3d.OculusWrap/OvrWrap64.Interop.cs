@@ -30,6 +30,8 @@ namespace Ab3d.OculusWrap
     // This file is the same as OvrWrap32.Interop.cs except that it is part of OvrWrap64 partial class.
     // This way maintenance of the library is much easier because all the changes need to be done only in one place
     // and then the file content can be easily copied to the OvrWrap32 class.
+    //
+    // The reason why there need to be two files is that the _ovrDllName that is used in the DllImport must be constant.
 
     public sealed partial class OvrWrap64
     {
@@ -180,7 +182,7 @@ namespace Ab3d.OculusWrap
             /// <returns>Returns unsigned int count.</returns>
             [SuppressUnmanagedCodeSecurity]
             [DllImport(_ovrDllName, EntryPoint = "ovr_GetTrackerCount", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern uint ovr_GetTrackerCount(IntPtr sessionPtr);
+            internal static extern int ovr_GetTrackerCount(IntPtr sessionPtr);
 
             /// <summary>
             /// Returns a given sensor description.
@@ -318,6 +320,51 @@ namespace Ab3d.OculusWrap
             internal static extern Result ovr_RecenterTrackingOrigin(IntPtr sessionPtr);
 
             /// <summary>
+            /// Allows manually tweaking the sensor position and orientation.
+            ///
+            /// This function is similar to ovr_RecenterTrackingOrigin in that it modifies the
+            /// (x,y,z) positional components and the yaw orientation component of the tracking space for
+            /// the HMD and controllers.
+            ///
+            /// While ovr_RecenterTrackingOrigin resets the tracking origin in reference to the HMD's
+            /// current pose, ovr_SpecifyTrackingOrigin allows the caller to explicitly specify a transform
+            /// for the tracking origin. This transform is expected to be an offset to the most recent
+            /// recentered origin, so calling this function repeatedly with the same originPose will keep
+            /// nudging the recentered origin in that direction.
+            ///
+            /// There are several use cases for this function. For example, if the application decides to
+            /// limit the yaw, or translation of the recentered pose instead of directly using the HMD pose
+            /// the application can query the current tracking state via ovr_GetTrackingState, and apply
+            /// some limitations to the HMD pose because feeding this pose back into this function.
+            /// Similarly, this can be used to "adjust the seating position" incrementally in apps that
+            /// feature seated experiences such as cockpit-based games.
+            ///
+            /// This function can emulate ovr_RecenterTrackingOrigin as such:
+            ///     ovrTrackingState ts = ovr_GetTrackingState(session, 0.0, ovrFalse);
+            ///     ovr_SpecifyTrackingOrigin(session, ts.HeadPose.ThePose);
+            ///
+            /// The roll and pitch orientation components are determined by gravity and cannot be redefined.
+            /// If you are using ovrTrackerPoses then you will need to call ovr_GetTrackerPose after
+            /// this, because the sensor position(s) will change as a result of this.
+            ///
+            /// For more info, see the notes on each ovrTrackingOrigin enumeration to understand how
+            /// recenter will vary slightly in its behavior based on the current ovrTrackingOrigin setting.
+            /// </summary>
+            /// <param name="sessionPtr">Specifies an IntPtr previously returned by ovr_Create.</param>
+            /// <param name="originPose">originPose Specifies a pose that will be used to transform the current tracking origin.</param>
+            /// <returns>
+            /// Returns an ovrResult indicating success or failure. In the case of failure, use
+            /// ovr_GetLastErrorInfo to get more information. Return values include but aren't limited to:
+            /// - ovrSuccess: Completed successfully.
+            /// - ovrError_InvalidParameter: The heading direction in originPose was invalid,
+            /// such as facing vertically. This can happen if the caller is directly feeding the pose
+            /// of a position-tracked device such as an HMD or controller into this function.
+            /// </returns>
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SpecifyTrackingOrigin", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern Result ovr_SpecifyTrackingOrigin(IntPtr sessionPtr, Posef originPose);
+
+            /// <summary>
             /// Clears the ShouldRecenter status bit in IntPtrStatus.
             ///
             /// Clears the ShouldRecenter status bit in IntPtrStatus, allowing further recenter 
@@ -392,6 +439,18 @@ namespace Ab3d.OculusWrap
             [SuppressUnmanagedCodeSecurity]
             [DllImport(_ovrDllName, EntryPoint = "ovr_GetTrackingState", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern void ovr_GetTrackingState(out TrackingState result, IntPtr sessionPtr, double absTime, Byte latencyMarker);
+
+            /// Returns an array of poses, where each pose matches a device type provided by the deviceTypes
+            /// array parameter.
+            /// <param name="sessionPtr">Specifies an ovrSession previously returned by ovr_Create.</param>
+            /// <param name="deviceTypes">Array of device types to query for their poses.</param>
+            /// <param name="deviceCount">deviceCount Number of queried poses. This number must match the length of the outDevicePoses and deviceTypes array.</param>
+            /// <param name="absTime">Specifies the absolute future time to predict the return ovrTrackingState value. Use 0 to request the most recent tracking state.</param>
+            /// <param name="outDevicePoses">Array of poses, one for each device type in deviceTypes arrays (size must match the size of deviceTypes array).</param>
+            /// <returns>Returns an ovrResult for which OVR_SUCCESS(result) is false upon error and true upon success.</returns>
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetDevicePoses", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern Result ovr_GetDevicePoses(IntPtr sessionPtr, [MarshalAs(UnmanagedType.LPArray)] TrackedDeviceType[] deviceTypes, int deviceCount, double absTime, [MarshalAs(UnmanagedType.LPArray), In, Out] PoseStatef[] outDevicePoses);
 
             /// <summary>
             /// Turns on vibration of the given controller.
@@ -1455,6 +1514,29 @@ namespace Ab3d.OculusWrap
             [SuppressUnmanagedCodeSecurity]
             [DllImport(_ovrDllName, EntryPoint = "ovr_ResetPerfStats", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Result ovr_ResetPerfStats(IntPtr sessionPtr);
+
+            /// <summary>
+            /// Returns the number of camera properties of all cameras
+            /// </summary>
+            /// <param name="sessionPtr">session Specifies an ovrSession previously returned by ovr_Create.</param>
+            /// <param name="cameras">cameras Pointer to the array. If null and the provided array capacity is sufficient, will return ovrError_NullArrayPointer.</param>
+            /// <param name="inoutCameraCount">inoutCameraCount Supply the array capacity, will return the actual # of cameras defined. If *inoutCameraCount is too small, will return ovrError_InsufficientArraySize.</param>
+            /// <returns>Returns the ids of external cameras the system knows about. Returns ovrError_NoExternalCameraInfo if there is not any eternal camera information.</returns>
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetExternalCameras", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern Result ovr_GetExternalCameras(IntPtr sessionPtr, [In, Out] ExternalCamera[] cameras, ref int inoutCameraCount);
+
+            /// <summary>
+            /// Sets the camera intrinsics and/or extrinsics stored for the cameraName camera Names must be less then 32 characters and null-terminated.
+            /// </summary>
+            /// <param name="sessionPtr">session Specifies an ovrSession previously returned by ovr_Create.</param>
+            /// <param name="name">Specifies which camera to set the intrinsics or extrinsics for</param>
+            /// <param name="intrinsics">Contains the intrinsic parameters to set, can be null</param>
+            /// <param name="extrinsics">Contains the extrinsic parameters to set, can be null</param>
+            /// <returns>Returns ovrSuccess or an ovrError code</returns>
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_SetExternalCameraProperties", SetLastError = false, CharSet = CharSet.Ansi, BestFitMapping = false, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern Result ovr_SetExternalCameraProperties(IntPtr sessionPtr, string name, ref CameraIntrinsics intrinsics, ref CameraExtrinsics extrinsics);
         }
     }
 }

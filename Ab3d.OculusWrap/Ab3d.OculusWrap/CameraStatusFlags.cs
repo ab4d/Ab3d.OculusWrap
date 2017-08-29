@@ -17,37 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
-// Based on OculusWrap project created by MortInfinite and licensed as Ms-PL (https://oculuswrap.codeplex.com/)
 
 namespace Ab3d.OculusWrap
 {
-    /// <summary>
-    /// The type of texture resource.
-    /// </summary>
-    /// <see cref="TextureSwapChainDesc"/>
-    public enum TextureType
+    public enum CameraStatusFlags
     {
         /// <summary>
-        /// 2D textures.
+        /// Initial state of camera
         /// </summary>
-        Texture2D,
+        None = 0x0,
 
         /// <summary>
-        /// External 2D texture. 
-        /// 
-        /// Not used on PC.
+        /// Bit set when the camera is connected to the system
         /// </summary>
-        Texture2DExternal,
+        Connected = 0x1,
 
         /// <summary>
-        /// Cube maps. ovrTextureSwapChainDesc::ArraySize must be 6 for this type.
+        /// Bit set when the camera is undergoing calibration
         /// </summary>
-        TextureCube,
+        Calibrating = 0x2,
 
         /// <summary>
-        /// Undocumented.
+        /// Bit set when the camera has tried & failed calibration
         /// </summary>
-        TextureCount,
+        CalibrationFailed = 0x4,
+
+        /// <summary>
+        /// Bit set when the camera has tried & passed calibration
+        /// </summary>
+        Calibrated = 0x8,
     }
 }

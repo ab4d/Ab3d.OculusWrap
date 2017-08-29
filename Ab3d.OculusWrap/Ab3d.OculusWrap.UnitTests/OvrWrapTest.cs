@@ -26,7 +26,7 @@ namespace Ab3d.OculusWrap.UnitTests
             InitParams initializationParameters = new InitParams();
             initializationParameters.Flags = InitFlags.Debug | InitFlags.RequestVersion;
             initializationParameters.ConnectionTimeoutMS = 0;
-            initializationParameters.RequestedMinorVersion = 10;
+            initializationParameters.RequestedMinorVersion = 17;
             initializationParameters.LogCallback = LogCallback;
 
             Result result = OVR.Initialize(initializationParameters);
@@ -76,35 +76,37 @@ namespace Ab3d.OculusWrap.UnitTests
 		{
 			DetectResult result = OVR.Detect(0);
 
-			Assert.AreEqual(result.IsOculusServiceRunning, 1, "The Oculus service isn't running.");
-			Assert.AreEqual(result.IsOculusHMDConnected, 1, "The HMD isn't connected.");
+			Assert.AreEqual(result.IsOculusServiceRunning, true, "The Oculus service isn't running.");
+			Assert.AreEqual(result.IsOculusHMDConnected, true, "The HMD isn't connected.");
 		}
 
 		[TestMethod]
 		public void GetLastErrorInfo()
 		{
 			IntPtr session	= CreateSession();
-			
-			ErrorInfo errorInfo = OVR.GetLastErrorInfo();
-			Assert.IsTrue(errorInfo.Result == Result.Success);
-			Assert.IsTrue(string.IsNullOrEmpty(errorInfo.ErrorString));
-		}
+
+		    var initParams = new InitParams(InitFlags.RequestVersion, 999);
+		    var result = OVR.Initialize(initParams);
+            
+            ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+			Assert.IsTrue(errorInfo.Result == result);
+			Assert.IsTrue(!string.IsNullOrEmpty(errorInfo.ErrorString) && errorInfo.ErrorString.Contains(".999")); // ErrorString == "Cannot reinitialize LibOVRRT with a different version. Newly requested major.minor version: 1.999; Current version: 1.17"
+        }
 
 		[TestMethod]
 		public void GetVersionString()
 		{
-			string versionString = OVR.GetVersionString();
+			string versionString = OVR.GetVersionString(); // "1.17.0"
             Assert.IsNotNull(versionString);
-            //Assert.AreEqual("1.3.2", versionString);
 
-		    Version version;
+            Version version;
             Assert.IsTrue(Version.TryParse(versionString, out version)); // Check if we can parse the version text
 		}
 
 		[TestMethod]
 		public void TraceMessage()
 		{
-			string message = "OculusWrapTest.TraceMessage unit test method ran successfully ščćžŠČĆŽ€ß¤.";
+			string message = "OculusWrapTest.TraceMessage unit test method ran successfully.";
 
 			int length = OVR.TraceMessage(LogLevel.Info, message);
 			Assert.AreEqual(message.Length, length);
@@ -167,9 +169,12 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr, "Failed to create session.");
 
-			uint count = OVR.GetTrackerCount(sessionPtr);
-			Assert.IsTrue(count >= 1, "No tracker found.");
-			Assert.IsTrue(count < 99, "Too many trackers found.");
+			int count = OVR.GetTrackerCount(sessionPtr);
+
+		    Assert.IsTrue(count >= 0 && count < 99, "invalid number of sensors.");
+
+            ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+		    Assert.AreEqual(errorInfo.Result, Result.Success);
 		}
 
 		[TestMethod]
@@ -198,7 +203,7 @@ namespace Ab3d.OculusWrap.UnitTests
 			SessionStatus sessionStatus = new SessionStatus();
 			Result result = OVR.GetSessionStatus(sessionPtr, ref sessionStatus);
 			Assert.IsTrue(result >= Result.Success);
-			Assert.AreEqual(sessionStatus.HmdPresent, 1);
+			Assert.IsTrue(sessionStatus.HmdPresent);
 		}
 
 		[TestMethod]
@@ -308,11 +313,11 @@ namespace Ab3d.OculusWrap.UnitTests
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
 			ControllerType controllerType = OVR.GetConnectedControllerTypes(sessionPtr);
-
-			Assert.IsTrue(controllerType.HasFlag(ControllerType.XBox), "No XBox controller was available.");
-			Assert.IsTrue(controllerType.HasFlag(ControllerType.Remote), "No Oculus Remote controller was available.");
-			//Assert.IsTrue(controllerType.HasFlag(ControllerType.Touch), "No Oculus Touch controller was available.");
-		}
+			
+            // We assert that at least one controller is present
+			Assert.IsTrue(controllerType.HasFlag(ControllerType.Remote) || controllerType.HasFlag(ControllerType.XBox) || controllerType.HasFlag(ControllerType.LTouch) || controllerType.HasFlag(ControllerType.RTouch), 
+                "No Oculus controller is available - please connect any Oculus controller for this test to pass.");
+        }
 
 		[TestMethod]
 		public void Session_SetControllerVibration()
@@ -339,11 +344,16 @@ namespace Ab3d.OculusWrap.UnitTests
 			fieldOfView.RightTan			= (float) Math.Tan(0.785398163); // 0.785398163 radians = 45 degrees.
 
 			Sizei size = OVR.GetFovTextureSize(sessionPtr, EyeType.Left, fieldOfView, 1.0f);
+            
             //Assert.AreEqual(1099, size.Width);
             //Assert.AreEqual(635, size.Height);
 
-            Assert.AreEqual(1586, size.Width);
-            Assert.AreEqual(915, size.Height);
+            //Assert.AreEqual(1586, size.Width);
+            //Assert.AreEqual(915, size.Height);
+
+            // The following is reported on 1.17:
+            Assert.AreEqual(1600, size.Width);
+            Assert.AreEqual(928, size.Height);
         }
 
 		[TestMethod]
@@ -532,12 +542,19 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
-			bool result = OVR.GetBool(sessionPtr, "DummyValue", false);
-			Assert.AreEqual(false, result);
+		    string parameterName = "DummyValue";
 
-            result = OVR.GetBool(sessionPtr, "DummyValue", true);
+            bool result = OVR.GetBool(sessionPtr, parameterName, false);
+			Assert.AreEqual(false, result); // Check if we get the fallback value
+
+            result = OVR.GetBool(sessionPtr, parameterName, true);
 			Assert.AreEqual(true, result);
-		}
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void Session_SetBool()
@@ -546,8 +563,8 @@ namespace Ab3d.OculusWrap.UnitTests
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
 			bool success = OVR.SetBool(sessionPtr, OvrWrap.OVR_DEBUG_HUD_STEREO_GUIDE_INFO_ENABLE, true);
-			Assert.AreEqual(1, success);
-		}
+			Assert.IsTrue(success);
+        }
 
 		[TestMethod]
 		public void Session_GetInt()
@@ -555,9 +572,15 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
-			int result = OVR.GetInt(sessionPtr, "DummyValue", 2);
+		    string parameterName = "DummyValue";
+            int result = OVR.GetInt(sessionPtr, parameterName, 2);
 			Assert.AreEqual(2, result);
-		}
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void Session_SetInt()
@@ -565,9 +588,15 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
+		    string parameterName = "DummyValue";
             bool success = OVR.SetInt(sessionPtr, "DummyValue", 1);
-			Assert.AreEqual(true, success);
-		}
+		    Assert.IsFalse(success); // This should not succeed because of invalid parameter name
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void ovr_GetFloat()
@@ -585,9 +614,15 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
-            bool success = OVR.SetFloat(sessionPtr, "DummyValue", 2f);
-			Assert.AreEqual(true, success);
-		}
+		    string parameterName = "DummyValue";
+            bool success = OVR.SetFloat(sessionPtr, parameterName, 2f);
+			Assert.IsFalse(success); // This should not succeed because of invalid parameter name
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void Session_GetFloatArray()
@@ -596,9 +631,16 @@ namespace Ab3d.OculusWrap.UnitTests
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
 			float[] values = new float[1];
-			int result = OVR.GetFloatArray(sessionPtr, "DummyValue", values, values.Length);
-			Assert.AreEqual(0u, result);
-		}
+		    string parameterName = "DummyValue";
+
+            int result = OVR.GetFloatArray(sessionPtr, parameterName, values, values.Length);
+			Assert.AreEqual(0, result);
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void Session_SetFloatArray()
@@ -607,9 +649,16 @@ namespace Ab3d.OculusWrap.UnitTests
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
 			float[] values = new float[1];
-			bool success = OVR.SetFloatArray(sessionPtr, "DummyValue", values, values.Length);
-			Assert.AreEqual(true, success);
-		}
+		    string parameterName = "DummyValue";
+
+            bool success = OVR.SetFloatArray(sessionPtr, parameterName, values, values.Length);
+			Assert.IsFalse(success);
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 		
 		[TestMethod]
 		public void Session_GetString()
@@ -617,9 +666,16 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
-            string result = OVR.GetString(sessionPtr, "DummyValue", string.Empty);
+		    string parameterName = "DummyValue";
+
+            string result = OVR.GetString(sessionPtr, parameterName, string.Empty);
 			Assert.IsNotNull(result);
-		}
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 		[TestMethod]
 		public void Session_SetString()
@@ -627,9 +683,16 @@ namespace Ab3d.OculusWrap.UnitTests
 			IntPtr sessionPtr = CreateSession();
 			Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
-            bool success = OVR.SetString(sessionPtr, "DummyValue", "New value");
-			Assert.AreEqual(true, success);
-		}
+		    string parameterName = "DummyValue";
+
+            bool success = OVR.SetString(sessionPtr, parameterName, "New value");
+			Assert.IsFalse(success);
+
+		    ErrorInfo errorInfo = OVR.GetLastErrorInfo();
+
+		    Assert.AreEqual(errorInfo.Result, Result.InvalidParameter);
+		    Assert.IsTrue(errorInfo.ErrorString.Contains(parameterName)); // ovr_SetFloat: invalid property name "DummyValue".
+        }
 
 
 
@@ -677,14 +740,20 @@ namespace Ab3d.OculusWrap.UnitTests
             IntPtr sessionPtr = CreateSession();
             Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
 
+            byte[] samples = { 0, 64, 128, 255 };
+            var gcHandle = GCHandle.Alloc(samples, GCHandleType.Pinned);
+
             var hapticsBuffer = new HapticsBuffer()
             {
-                Samples = IntPtr.Zero, // TOOD: How to prepare data for this
-                SamplesCount = 0,
+                Samples = gcHandle.AddrOfPinnedObject(),
+                SamplesCount = samples.Length,
                 SubmitMode = HapticsBufferSubmitMode.Enqueue
             };
 
-            Result result = OVR.SubmitControllerVibration(sessionPtr, ControllerType.Touch, hapticsBuffer);
+            Result result = OVR.SubmitControllerVibration(sessionPtr, ControllerType.LTouch, hapticsBuffer);
+
+            gcHandle.Free();
+
             Assert.IsTrue(result >= Result.Success, "Failed to SubmitControllerVibration");
         }
 
@@ -718,13 +787,19 @@ namespace Ab3d.OculusWrap.UnitTests
 
             Assert.IsTrue(result >= Result.Success, "Failed to call TestBoundary");
 
-            // Check that we get a valid data back (we assume the values bigger than 10 meters are not valid)
-            Assert.IsTrue(boundaryTestResult.ClosestDistance > -10 && boundaryTestResult.ClosestDistance < 10, "Invalid ClosestDistance");
+            if (result != Result.Success_DeviceUnavailable)
+            {
+                // Check that we get a valid data back (we assume the values bigger than 10 meters are not valid)
+                Assert.IsTrue(boundaryTestResult.ClosestDistance > -10 && boundaryTestResult.ClosestDistance < 10, "Invalid ClosestDistance");
 
-            Assert.IsTrue(boundaryTestResult.ClosestPoint.X > 0 && boundaryTestResult.ClosestPoint.X < 10 &&
-                          boundaryTestResult.ClosestPoint.Y >= 0 && boundaryTestResult.ClosestPoint.Y < 10 &&
-                          boundaryTestResult.ClosestPoint.Z > 0 && boundaryTestResult.ClosestPoint.Z < 10,
-                          "Invalid ClosestPoint");
+                Assert.IsTrue(-10 < boundaryTestResult.ClosestPoint.X && boundaryTestResult.ClosestPoint.X < 10 &&
+                              -10 < boundaryTestResult.ClosestPoint.Y && boundaryTestResult.ClosestPoint.Y < 10 &&
+                              -10 < boundaryTestResult.ClosestPoint.Z && boundaryTestResult.ClosestPoint.Z < 10,
+                              "Invalid ClosestPoint");
+
+                Assert.IsTrue(boundaryTestResult.ClosestPointNormal.X + boundaryTestResult.ClosestPointNormal.Y + boundaryTestResult.ClosestPointNormal.Z < 0.01, // should be 1
+                              "Invalid ClosestPointNormal");
+            }
         }
 
         [TestMethod]
@@ -741,13 +816,19 @@ namespace Ab3d.OculusWrap.UnitTests
 
             Assert.IsTrue(result >= Result.Success, "Failed to call TestBoundaryPoint");
 
-            // Check that we get a valid data back (we assume the values bigger than 10 meters are not valid)
-            Assert.IsTrue(boundaryTestResult.ClosestDistance > -10 && boundaryTestResult.ClosestDistance < 10, "Invalid ClosestDistance");
+            if (result != Result.Success_DeviceUnavailable)
+            {
+                // Check that we get a valid data back (we assume the values bigger than 10 meters are not valid)
+                Assert.IsTrue(boundaryTestResult.ClosestDistance > -10 && boundaryTestResult.ClosestDistance < 10, "Invalid ClosestDistance");
 
-            Assert.IsTrue(boundaryTestResult.ClosestPoint.X > 0 && boundaryTestResult.ClosestPoint.X < 10 &&
-                          boundaryTestResult.ClosestPoint.Y > 0 && boundaryTestResult.ClosestPoint.Y < 10 &&
-                          boundaryTestResult.ClosestPoint.Z > 0 && boundaryTestResult.ClosestPoint.Z < 10,
-                          "Invalid ClosestPoint");
+                Assert.IsTrue(-10 < boundaryTestResult.ClosestPoint.X && boundaryTestResult.ClosestPoint.X < 10 &&
+                              -10 < boundaryTestResult.ClosestPoint.Y && boundaryTestResult.ClosestPoint.Y < 10 &&
+                              -10 < boundaryTestResult.ClosestPoint.Z && boundaryTestResult.ClosestPoint.Z < 10,
+                              "Invalid ClosestPoint");
+
+                Assert.IsTrue(boundaryTestResult.ClosestPointNormal.X + boundaryTestResult.ClosestPointNormal.Y + boundaryTestResult.ClosestPointNormal.Z < 0.01, // should be 1
+                              "Invalid ClosestPointNormal");
+            }
         }
 
         [TestMethod]
@@ -872,6 +953,96 @@ namespace Ab3d.OculusWrap.UnitTests
             Result result = OVR.ResetPerfStats(sessionPtr);
 
             Assert.IsTrue(result >= Result.Success, "Failed to call ResetPerfStats");
+        }
+
+        [TestMethod]
+        public void Session_SpecifyTrackingOrigin()
+        {
+            IntPtr sessionPtr = CreateSession();
+            Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
+
+            var posef = new Posef()
+            {
+                Position = new Vector3f(0, 0, 0),
+                Orientation = new Quaternionf(0, 1, 0, 0)
+            };
+
+            Result result = OVR.SpecifyTrackingOrigin(sessionPtr, posef);
+
+            Assert.IsTrue(result >= Result.Success, "Failed to call SpecifyTrackingOrigin");
+        }
+
+        [TestMethod]
+        public void Session_GetDevicePoses()
+        {
+            IntPtr sessionPtr = CreateSession();
+            Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
+
+            var deviceTypes = new TrackedDeviceType[1];
+            deviceTypes[0] = TrackedDeviceType.HMD;
+
+            var outDevicePoses = new PoseStatef[1];
+
+            //var deviceTypes = new TrackedDeviceType[3];
+            //deviceTypes[0] = TrackedDeviceType.HMD;
+            //deviceTypes[1] = TrackedDeviceType.LTouch;
+            //deviceTypes[2] = TrackedDeviceType.RTouch;
+
+            //var outDevicePoses = new PoseStatef[3]; 
+
+            Result result = OVR.GetDevicePoses(sessionPtr, deviceTypes, 0, outDevicePoses);
+
+            Assert.IsTrue(result >= Result.Success || result == Result.LostTracking, "Failed to call GetDevicePoses");
+        }
+
+        [TestMethod]
+        public void Session_GetExternalCameras()
+        {
+            IntPtr sessionPtr = CreateSession();
+            Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
+
+            ExternalCamera[] externalCameras;
+            Result result = OVR.GetExternalCameras(sessionPtr, out externalCameras);
+
+            Assert.IsTrue(result >= Result.Success || result == Result.NoExternalCameraInfo, "Failed to call GetExternalCameras");
+        }
+
+        [TestMethod]
+        public void Session_SetExternalCameraProperties()
+        {
+            // This comment is commented because it creates a new external camera that is persistent after one session ends.
+            // In v1.17 there seems to be no way to delete this camera - even when passing IntPtr.Zero to ovr_SetExternalCameraProperties
+
+            //IntPtr sessionPtr = CreateSession();
+            //Assert.AreNotEqual(IntPtr.Zero, sessionPtr);
+
+            //var cameraExtrinsics = new CameraExtrinsics()
+            //{
+            //    RelativePose = new Posef() {Orientation = new Quaternionf(0, 1, 0, 45)}
+            //};
+
+            //var cameraIntrinsics = new CameraIntrinsics()
+            //{
+            //    VirtualFarPlaneDistanceMeters = 10f,
+            //    VirtualNearPlaneDistanceMeters = 0.125f
+            //};
+
+            //Result result = OVR.SetExternalCameraProperties(sessionPtr, "OculusWrapTestCamera", ref cameraIntrinsics, ref cameraExtrinsics);
+
+            //Assert.IsTrue(result >= Result.Success, "Failed to call SetExternalCameraProperties");
+
+
+            //ExternalCamera[] externalCameras;
+            //result = OVR.GetExternalCameras(sessionPtr, out externalCameras);
+
+            //Assert.IsTrue(result >= Result.Success, "Failed to call GetExternalCameras");
+
+            //Assert.IsTrue(externalCameras != null && externalCameras.Length == 1);
+
+            //Assert.AreEqual(externalCameras[0].Extrinsics.RelativePose.Orientation.Y, 1f);
+            //Assert.AreEqual(externalCameras[0].Extrinsics.RelativePose.Orientation.W, 45f);
+            //Assert.AreEqual(externalCameras[0].Intrinsics.VirtualNearPlaneDistanceMeters, 0.125f);
+            //Assert.AreEqual(externalCameras[0].Intrinsics.VirtualFarPlaneDistanceMeters, 10f);
         }
     }
 }

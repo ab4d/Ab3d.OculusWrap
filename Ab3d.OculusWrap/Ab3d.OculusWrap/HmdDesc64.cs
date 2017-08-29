@@ -58,11 +58,7 @@ namespace Ab3d.OculusWrap
         {
             get
             {
-                if (ProductNameBytes == null)
-                    return null;
-
-                string result = Encoding.ASCII.GetString(ProductNameBytes).TrimEnd((char)0);
-                return result;
+                return OvrWrap.GetAsciiString(ProductNameBytes);
             }
         }
 
@@ -79,11 +75,7 @@ namespace Ab3d.OculusWrap
         {
             get
             {
-                if (ManufacturerBytes == null)
-                    return null;
-
-                string result = Encoding.ASCII.GetString(ManufacturerBytes).TrimEnd((char)0);
-                return result;
+                return OvrWrap.GetAsciiString(ManufacturerBytes);
             }
         }
 

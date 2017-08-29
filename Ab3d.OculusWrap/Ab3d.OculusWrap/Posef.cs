@@ -26,6 +26,7 @@ namespace Ab3d.OculusWrap
 {
     /// <summary>
     /// Position and orientation together.
+    /// The coordinate system used is right-handed Cartesian.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Posef

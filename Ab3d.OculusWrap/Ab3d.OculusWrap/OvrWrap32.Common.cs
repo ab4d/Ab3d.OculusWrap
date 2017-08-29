@@ -86,7 +86,7 @@ namespace Ab3d.OculusWrap
         }
 
         /// <inheritdoc />
-        public override uint GetTrackerCount(IntPtr sessionPtr)
+        public override int GetTrackerCount(IntPtr sessionPtr)
         {
             return SafeNativeMethods.ovr_GetTrackerCount(sessionPtr);
         }
@@ -134,6 +134,12 @@ namespace Ab3d.OculusWrap
         }
 
         /// <inheritdoc />
+        public override Result SpecifyTrackingOrigin(IntPtr sessionPtr, Posef originPose)
+        {
+            return SafeNativeMethods.ovr_SpecifyTrackingOrigin(sessionPtr, originPose);
+        }
+
+        /// <inheritdoc />
         public override void ClearShouldRecenterFlag(IntPtr sessionPtr)
         {
             SafeNativeMethods.ovr_ClearShouldRecenterFlag(sessionPtr);
@@ -164,6 +170,17 @@ namespace Ab3d.OculusWrap
             SafeNativeMethods.ovr_GetTrackingState(out trackingState, sessionPtr, absTime, latencyMarker ? (byte)1 : (byte)0);
 
             return trackingState;
+        }
+
+        /// <inheritdoc />
+        public override Result GetDevicePoses(IntPtr sessionPtr, TrackedDeviceType[] deviceTypes, double absTime, PoseStatef[] outDevicePoses)
+        {
+            if (deviceTypes == null) throw new ArgumentNullException(nameof(deviceTypes));
+            if (outDevicePoses == null) throw new ArgumentNullException(nameof(outDevicePoses));
+
+            if (deviceTypes.Length != outDevicePoses.Length) throw new ArgumentException("Size of deviceTypes array must be the same as size of outDevicePoses array");
+
+            return SafeNativeMethods.ovr_GetDevicePoses(sessionPtr, deviceTypes, deviceTypes.Length, absTime, outDevicePoses);
         }
 
         /// <inheritdoc />
@@ -567,6 +584,40 @@ namespace Ab3d.OculusWrap
         public override Result ResetPerfStats(IntPtr sessionPtr)
         {
             return SafeNativeMethods.ovr_ResetPerfStats(sessionPtr);
+        }
+
+        /// <inheritdoc />     
+        public override Result GetExternalCameras(IntPtr sessionPtr, out ExternalCamera[] cameras)
+        {
+            int arraySize = 0;
+            Result result = Result.InsufficientArraySize;
+            cameras = null;
+
+            while (result == Result.InsufficientArraySize)
+            {
+                arraySize++;
+                cameras = new ExternalCamera[arraySize];
+
+                result = SafeNativeMethods.ovr_GetExternalCameras(sessionPtr, cameras, ref arraySize);
+            }
+
+            if (result == Result.NoExternalCameraInfo)
+                cameras = null;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the camera intrinsics and/or extrinsics stored for the cameraName camera Names must be less then 32 characters and null-terminated.
+        /// </summary>
+        /// <param name="sessionPtr">session Specifies an ovrSession previously returned by ovr_Create.</param>
+        /// <param name="name">Specifies which camera to set the intrinsics or extrinsics for</param>
+        /// <param name="intrinsics">Contains the intrinsic parameters to set, can be null</param>
+        /// <param name="extrinsics">Contains the extrinsic parameters to set, can be null</param>
+        /// <returns>Returns ovrSuccess or an ovrError code</returns>
+        public override Result SetExternalCameraProperties(IntPtr sessionPtr, string name, ref CameraIntrinsics intrinsics, ref CameraExtrinsics extrinsics)
+        {
+            return SafeNativeMethods.ovr_SetExternalCameraProperties(sessionPtr, name, ref intrinsics, ref extrinsics);
         }
         #endregion        
     }

@@ -43,8 +43,7 @@ namespace Ab3d.OculusWrap
         public TextureFormat		Format;
 
         /// <summary>
-        /// Only supported with ovrTexture_2D. 
-        /// Not supported on PC at this time.
+        /// Must be 6 for ovrTexture_Cube, 1 for other types.
         /// </summary>
         public int					ArraySize;
 
@@ -64,7 +63,7 @@ namespace Ab3d.OculusWrap
         public int					MipLevels;
 
         /// <summary>
-        /// Current only supported on depth textures
+        /// Only supported with depth textures
         /// </summary>
         public int					SampleCount;
 

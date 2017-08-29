@@ -121,5 +121,35 @@ namespace Ab3d.OculusWrap
         /// In the event the GPU time is not available, expect this value to be -1.0f
         /// </summary>	
         public float CompositorGpuEndToVsyncElapsedTime;
+
+
+        ///
+        /// Async Spacewarp stats (ASW)
+        ///
+
+        /// <summary>	
+        /// Will be true if ASW is active for the given frame such that the application is being forced
+        /// into half the frame-rate while the compositor continues to run at full frame-rate.
+        /// </summary>	
+        [MarshalAs(UnmanagedType.U1)]
+        public bool AswIsActive;
+
+        /// <summary>	
+        /// Increments each time ASW it activated where the app was forced in and out of
+        /// half-rate rendering.
+        /// </summary>	
+        public int AswActivatedToggleCount;
+
+        /// <summary>	
+        /// Accumulates the number of frames presented by the compositor which had extrapolated
+        /// ASW frames presented.
+        /// </summary>	
+        public int AswPresentedFrameCount;
+
+        /// <summary>	
+        /// Accumulates the number of frames that the compositor tried to present when ASW is
+        /// active but failed.
+        /// </summary>	
+        public int AswFailedFrameCount;
     }
 }

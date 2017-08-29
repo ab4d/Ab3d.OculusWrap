@@ -32,16 +32,16 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential, Pack=4)]
     public struct FovPort
     {
-        /// The tangent of the angle between the viewing vector and the top edge of the field of view.
+        /// Tangent of the angle between the viewing vector and the top edge of the field of view.
         public float UpTan;
 
-        /// The tangent of the angle between the viewing vector and the bottom edge of the field of view.
+        /// Tangent of the angle between the viewing vector and the bottom edge of the field of view.
         public float DownTan;
 
-        /// The tangent of the angle between the viewing vector and the left edge of the field of view.
+        /// Tangent of the angle between the viewing vector and the left edge of the field of view.
         public float LeftTan;
 
-        /// The tangent of the angle between the viewing vector and the right edge of the field of view.
+        /// Tangent of the angle between the viewing vector and the right edge of the field of view.
         public float RightTan;
     }
 }

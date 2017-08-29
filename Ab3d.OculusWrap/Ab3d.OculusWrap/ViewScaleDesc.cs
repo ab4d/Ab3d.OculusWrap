@@ -26,7 +26,16 @@ using System.Runtime.InteropServices;
 namespace Ab3d.OculusWrap
 {
     /// <summary>
-    /// Contains the data necessary to properly calculate position info for various layer types.
+    /// Contains the data necessary to properly calculate position info for various layer types.<br/>
+    /// - HmdToEyePose is the same value pair provided in ovrEyeRenderDesc.<br/>
+    /// - HmdSpaceToWorldScaleInMeters is used to scale player motion into in-application units.<br/>
+    ///   In other words, it is how big an in-application unit is in the player's physical meters.
+    ///   For example, if the application uses inches as its units then HmdSpaceToWorldScaleInMeters
+    ///   would be 0.0254.<br/>
+    ///   Note that if you are scaling the player in size, this must also scale. So if your application
+    ///   units are inches, but you're shrinking the player to half their normal size, then
+    ///   HmdSpaceToWorldScaleInMeters would be 0.0254*2.0.
+    /// <seealso cref="EyeRenderDesc"/>, OvrWrap.SubmitFrame
     /// </summary>
     /// <see cref="EyeRenderDesc"/>
     /// <see cref="OvrWrap.SubmitFrame(IntPtr, long, IntPtr, ref LayerEyeFov)"/>
@@ -34,13 +43,28 @@ namespace Ab3d.OculusWrap
     [StructLayout(LayoutKind.Sequential, Pack=4)]
     public struct ViewScaleDesc
     {
+        // Before version 1.17 the EyeRenderDesc contained HmdToEyeOffset instead of HmdToEyePose
+        ///// <summary>
+        ///// Translation of each eye.
+        ///// 
+        ///// The same value pair provided in EyeRenderDesc.
+        ///// </summary>
+        //public Vector3f[] HmdToEyeOffset;
+
+
+        // We cannot marshal array of Posef structs, so there are two fields instead of array of two Posef structs
+
         /// <summary>
-        /// Translation of each eye.
-        /// 
-        /// The same value pair provided in EyeRenderDesc.
+        /// Transform of first eye from the HMD center, in meters.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst=2)]
-        public Vector3f[]	HmdToEyeOffset;
+        public Posef HmdToEyePose0;
+        
+        /// <summary>
+        /// Transform of second eye from the HMD center, in meters.
+        /// </summary>
+        public Posef HmdToEyePose1;
+
+
 			
         /// <summary>
         /// Ratio of viewer units to meter units.

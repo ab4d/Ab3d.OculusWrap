@@ -106,9 +106,9 @@ namespace Ab3d.DXEngine.OculusWrap
         /// User need to dispose the created DXDevice when it is not needed any more.
         /// This method can throw exceptions in case initialization of OVR or DirectX failes.
         /// </summary>
-        /// <param name="requestedOculusSdkMinorVersion">minimal version of Oculus SKD that is required for this application (default value is 10)</param>
+        /// <param name="requestedOculusSdkMinorVersion">minimal version of Oculus SKD that is required for this application (default value is 17)</param>
         /// <returns>Created DXDevice that needs to be disposed by the user</returns>
-        public DXDevice InitializeOvrAndDXDevice(int requestedOculusSdkMinorVersion = 10)
+        public DXDevice InitializeOvrAndDXDevice(int requestedOculusSdkMinorVersion = 17)
         {
             if (_sessionPtr != IntPtr.Zero)
                 throw new Exception("InitializeOvrAndDXDevice cannot be called after the sessionPtr was already set.");
@@ -243,10 +243,10 @@ namespace Ab3d.DXEngine.OculusWrap
 
 
             _eyeRenderDesc[0] = _ovr.GetRenderDesc(_sessionPtr, EyeType.Left, _hmdDesc.DefaultEyeFov[0]);
-            _hmdToEyeOffset[1] = _eyeRenderDesc[1].HmdToEyeOffset;
+            _hmdToEyeOffset[1] = _eyeRenderDesc[1].HmdToEyePose.Position;
 
             _eyeRenderDesc[1] = _ovr.GetRenderDesc(_sessionPtr, EyeType.Right, _hmdDesc.DefaultEyeFov[1]);
-            _hmdToEyeOffset[1] = _eyeRenderDesc[1].HmdToEyeOffset;
+            _hmdToEyeOffset[1] = _eyeRenderDesc[1].HmdToEyePose.Position;
 
 
             // Create MSAA back buffer if needed

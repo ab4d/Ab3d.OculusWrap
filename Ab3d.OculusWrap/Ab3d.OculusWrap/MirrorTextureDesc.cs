@@ -45,11 +45,16 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Height
         /// </summary>
-        /// 
         public int Height;
+
         /// <summary>
         /// MiscFlags
         /// </summary>
         public TextureMiscFlags MiscFlags;
+
+        /// <summary>
+        /// MirrorOptions
+        /// </summary>
+        public int MirrorOptions;
     }
 }

@@ -157,17 +157,17 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Increase size of output array
         /// </summary>
-        ovrError_InsufficientArraySize = -1016,
+        InsufficientArraySize = -1016,
 
         /// <summary>
         /// There is not any external camera information stored by ovrServer.
         /// </summary>
-        ovrError_NoExternalCameraInfo = -1017,
+        NoExternalCameraInfo = -1017,
 
         /// <summary>
         /// Tracking is lost when ovr_GetDevicePoses() is called.
         /// </summary>
-        ovrError_LostTracking = -1018,
+        LostTracking = -1018,
         #endregion
 
         #region Audio error range, reserved for Audio errors.
@@ -321,7 +321,7 @@ namespace Ab3d.OculusWrap
         /// <summary>
         /// Vulkan initialization error.
         /// </summary>
-        ovrError_InitializeVulkan = -3025,
+        InitializeVulkan = -3025,
 
         #endregion
 

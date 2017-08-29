@@ -38,7 +38,7 @@ namespace Ab3d.OculusWrap
         public System.IntPtr Samples;
 
         /// <summary>	
-        /// Number of samples
+        /// Number of samples (up to OvrWrap.OVR_HAPTICS_BUFFER_SAMPLES_MAX)
         /// </summary>	
         public int SamplesCount;
 

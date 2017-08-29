@@ -61,8 +61,8 @@ namespace Ab3d.OculusWrap
         VersionInfo        = 5,
 
         /// <summary>
-        /// Count of enumerated elements.
+        /// Shows Async Spacewarp-specific info
         /// </summary>
-        Count              = 6
+        ovrPerfHud_AswStats = 6,
     }
 }

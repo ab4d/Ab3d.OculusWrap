@@ -97,5 +97,33 @@ namespace Ab3d.OculusWrap
         /// </summary>   
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public Vector2f[] ThumbstickNoDeadzone;
+
+        /// <summary>
+        /// Left and right finger trigger values (ovrHand_Left and ovrHand_Right), in range 0.0 to 1.0f.
+        /// No deadzone or filter
+        /// This has been formally named "Grip Button". We retain the name HandTrigger for backwards code
+        /// compatibility.
+        /// User-facing documentation should refer to it as the Grip Button or simply Grip.
+        /// </summary>   
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+        float[] IndexTriggerRaw;
+
+        /// <summary>
+        /// Left and right hand trigger values (ovrHand_Left and ovrHand_Right), in the range 0.0 to 1.0f.
+        /// No deadzone or filter
+        /// This has been formally named "Grip Button". We retain the name HandTrigger for backwards code
+        /// compatibility.
+        /// User-facing documentation should refer to it as the Grip Button or simply Grip.
+        /// </summary>   
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+        float[] HandTriggerRaw;
+
+        /// <summary>
+        /// Horizontal and vertical thumbstick axis values (ovrHand_Left and ovrHand_Right), in the range
+        /// -1.0f to 1.0f
+        /// No deadzone or filter
+        /// </summary>   
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+        public Vector2f[] ThumbstickRaw;
     }
 }

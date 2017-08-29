@@ -26,7 +26,7 @@ namespace Ab3d.OculusWrap.UnitTests
             InitParams initializationParameters = new InitParams();
             initializationParameters.Flags = InitFlags.Debug | InitFlags.RequestVersion;
             initializationParameters.ConnectionTimeoutMS = 0;
-            initializationParameters.RequestedMinorVersion = 8;
+            initializationParameters.RequestedMinorVersion = 17;
             initializationParameters.LogCallback = LogCallback;
 
             Result result = OVR.Initialize(initializationParameters);
@@ -494,18 +494,17 @@ namespace Ab3d.OculusWrap.UnitTests
 
 			// Define field of view (This is used for both left and right eye).
 			FovPort fieldOfView	= new FovPort();
-			fieldOfView.DownTan				= (float) Math.Tan(0.523598776); // 0.523598776 radians = 30 degrees.
-			fieldOfView.UpTan				= (float) Math.Tan(0.523598776); // 0.523598776 radians = 30 degrees.
-			fieldOfView.LeftTan				= (float) Math.Tan(0.785398163); // 0.785398163 radians = 45 degrees.
-			fieldOfView.RightTan			= (float) Math.Tan(0.785398163); // 0.785398163 radians = 45 degrees.
+			fieldOfView.DownTan	 = (float) Math.Tan(0.523598776); // 0.523598776 radians = 30 degrees.
+			fieldOfView.UpTan	 = (float) Math.Tan(0.523598776); // 0.523598776 radians = 30 degrees.
+			fieldOfView.LeftTan	 = (float) Math.Tan(0.785398163); // 0.785398163 radians = 45 degrees.
+			fieldOfView.RightTan = (float) Math.Tan(0.785398163); // 0.785398163 radians = 45 degrees.
 
-			EyeRenderDesc renderDescLeft	= OVR.GetRenderDesc(sessionPtr, EyeType.Left, fieldOfView);
-			EyeRenderDesc renderDescRight	= OVR.GetRenderDesc(sessionPtr, EyeType.Left, fieldOfView);
+			EyeRenderDesc renderDescLeft  = OVR.GetRenderDesc(sessionPtr, EyeType.Left, fieldOfView);
+			EyeRenderDesc renderDescRight = OVR.GetRenderDesc(sessionPtr, EyeType.Left, fieldOfView);
 
-			ViewScaleDesc viewScaleDesc				   = new ViewScaleDesc();
-			viewScaleDesc.HmdToEyeOffset			   = new Vector3f[2];
-			viewScaleDesc.HmdToEyeOffset[0]			   = renderDescLeft.HmdToEyeOffset;
-			viewScaleDesc.HmdToEyeOffset[1]			   = renderDescRight.HmdToEyeOffset;
+			var viewScaleDesc = new ViewScaleDesc();
+		    viewScaleDesc.HmdToEyePose0 = renderDescLeft.HmdToEyePose;
+            viewScaleDesc.HmdToEyePose1 = renderDescRight.HmdToEyePose;
 			viewScaleDesc.HmdSpaceToWorldScaleInMeters = 1;
 
 			// Determine texture size matching the field of view.

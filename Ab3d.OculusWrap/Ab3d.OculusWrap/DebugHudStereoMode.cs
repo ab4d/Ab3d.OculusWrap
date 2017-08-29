@@ -58,10 +58,5 @@ namespace Ab3d.OculusWrap
         /// Renders screen-space crosshair at infinity for Stereo Debugging
         /// </summary>
         CrosshairAtInfinity = 3,
-
-        /// <summary>
-        /// Count of enumerated elements
-        /// </summary>
-        Count
     }
 }

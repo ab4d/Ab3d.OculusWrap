@@ -59,14 +59,12 @@ namespace Ab3d.OculusWrap
 
         /// <summary>
         /// The pose of the origin captured during calibration.
-        /// 
         /// Like all other poses here, this is expressed in the space set by ovr_RecenterTrackingOrigin,
-        /// and so will change every time that is called. This pose can be used to calculate
-        /// where the calibrated origin lands in the new recentered space.
-        /// 
-        /// If an application never calls ovr_RecenterTrackingOrigin, expect this value to be the identity
-        /// pose and as such will point respective origin based on TrackingOrigin requested when
-        /// calling ovr_GetTrackingState.
+        /// or ovr_SpecifyTrackingOrigin and so will change every time either of those functions are
+        /// called. This pose can be used to calculate where the calibrated origin lands in the new
+        /// recentered space. If an application never calls ovr_RecenterTrackingOrigin or
+        /// ovr_SpecifyTrackingOrigin, expect this value to be the identity pose and as such will point
+        /// respective origin based on ovrTrackingOrigin requested when calling ovr_GetTrackingState.
         /// </summary>
         public Posef CalibratedOrigin;
     }

@@ -51,6 +51,19 @@ namespace Ab3d.OculusWrap
         RequestVersion = 0x00000004,
 
         /// <summary>
+        /// This client will not be visible in the HMD.
+        /// Typically set by diagnostic or debugging utilities.
+        /// </summary>
+        Invisible = 0x00000010,
+
+        /// <summary>
+        /// This client will alternate between VR and 2D rendering.
+        /// Typically set by game engine editors and VR-enabled web browsers.
+        /// </summary>
+        MixedRendering = 0x00000020,
+
+
+        /// <summary>
         /// These bits are writable by user code.
         /// </summary>
         WritableBits = 0x00ffffff
