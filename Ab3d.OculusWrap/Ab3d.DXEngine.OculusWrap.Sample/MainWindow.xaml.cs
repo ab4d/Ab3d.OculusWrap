@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Ab3d.Cameras;
+using Ab3d.Common;
 using Ab3d.Common.Cameras;
 using Ab3d.Controls;
 using Ab3d.DirectX;
@@ -89,7 +90,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     CompositionTarget.Rendering -= CompositionTargetOnRendering; // Stop rendering at 60 FPS
 
                 if (_xInputCameraController != null)
-                    _xInputCameraController.Stop();
+                    _xInputCameraController.StopCheckingController();
 
                 Dispose();
             };
@@ -197,6 +198,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             _xInputCameraController = new XInputCameraController();
             _xInputCameraController.TargetCamera = _camera;
             _xInputCameraController.MovementSpeed = 0.01;
+            _xInputCameraController.MoveVerticallyWithDPadButtons = true;
 
             // We handle the rotation by ourself to prevent rotating the camera up and down - this is done only by HMD
             _xInputCameraController.RightThumbChanged += delegate(object sender, XInputControllerThumbChangedEventArgs e)
@@ -208,11 +210,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 e.IsHandled = true;
             };
 
-            _xInputCameraController.Start(); // Start listening to events
-
-            // IMPORTANT:
-            // We call _xInputCameraController.Stop() method in this.Closing event
-
+            _xInputCameraController.StartCheckingController();
 
 
             // Now we can create our sample 3D scene

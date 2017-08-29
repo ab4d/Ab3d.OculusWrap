@@ -48,6 +48,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Ab3d.PowerToys\bin\net40\Ab3d.PowerToys.dll</HintPath>
     </Reference>
+    <Reference Include="Ab3d.PowerToys.Input, Version=8.0.6424.1040, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Ab3d.PowerToys\bin\net40\Ab3d.PowerToys.Input.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net40\SharpDX.dll</HintPath>
       <Private>True</Private>
@@ -89,9 +93,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="XInput\XInputCameraController.cs" />
-    <Compile Include="XInput\XInputControllerButtonChangedEventArgs.cs" />
-    <Compile Include="XInput\XInputControllerThumbChangedEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -148,6 +149,7 @@
       <Name>Ab3d.OculusWrap</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
