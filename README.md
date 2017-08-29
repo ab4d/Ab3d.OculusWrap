@@ -1,7 +1,11 @@
 # Ab3d.OculusWrap
-.Net wrapper for Oculus Rift SDK.
+Ab3d.OculusWrap is a .Net wrapper for Oculus Rift SDK.
+
+![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
 The current version of Ab3d.OculusWrap is built for Oculus SDK 1.10.1 (2016-12-06).
+
+The library is also available as a NuGet package: Ab3d.OculusWrap (https://www.nuget.org/packages/Ab3d.OculusWrap/)
 
 The project is based on the OculusWrap library that was created by MortInfinite (https://oculuswrap.codeplex.com/).
 Because the original OculusWrap library was discontinued on April 2016 (with support for Oculus SDK 1.3.2), 
@@ -32,7 +36,7 @@ See below for more info.
 2. Download the latest Oculus SDK for PC Development (https://developer3.oculus.com/downloads/)
 3. Open Ab3d.OculusWrap solution in Visual Studio
 4. Compile the solution. If you do not have Ab3d.DXEngine and Ab3d.PowerToys installed, you will not be able to compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects. But you can still start the Ab3d.OculusWrap.DemoDX11 project with right clicking on the project and then selecting Debug -> Start new instance.
-5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
+5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from https://www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
 
 
 ### Projects in the Ab3d.OculusWrap solution
@@ -61,17 +65,16 @@ The projects are compiled for .Net 4.0 CP and are using SharpDX 2.6.3 (the lates
   This sample allows you to use XBOX controller to walk around a simple 3D structure. The sample shows how easy is to create 3D content with Ab3d.DXEngine and Ab3d.PowerToys librariesto and that enabling Oculus Rift rendering required only a few additional lines of code.
 
 The following screenshot is showing the Ab3d.DXEngine.OculusWrap.Sample. And as you can see from the the window title and Oculus Performance overlay it has no problems with rendering at 90 FPS and still having plently of performance headroom.
-![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
 Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
 To make working with 3D graphics even easier, the Ab3d.DXEngine also fully support the Ab3d.PowerToys library (see below).
-More information about Ab3d.DXEngine can be read on www.ab4d.com/DXEngine.aspx
+More information about Ab3d.DXEngine can be read on https://www.ab4d.com/DXEngine.aspx
 
 Ab3d.PowerToys library is the ultimate helper library for WPF 3D graphics.
 The library contains many helper classes that greatly simply work with 3D graphics.
 It also comes with many samples that can be used to jump-start development.
-More information about the Ab3d.PowerToys library can be read on www.ab4d.com/PowerToys.aspx.
+More information about the Ab3d.PowerToys library can be read on https://www.ab4d.com/PowerToys.aspx.
 
 To compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects, the Ab3d.DXEngine and Ab3d.PowerToys libraries needs to be installed.
-A 60-day evaluation version can be downloaded from www.ab4d.com/Downloads.aspx.
+A 60-day evaluation version can be downloaded from https://www.ab4d.com/Downloads.aspx.
