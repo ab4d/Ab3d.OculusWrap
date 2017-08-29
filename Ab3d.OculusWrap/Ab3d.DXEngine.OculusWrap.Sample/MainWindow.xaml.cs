@@ -51,7 +51,8 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
         private int _lastFpsMeterSecond = -1;
         private bool _isFirstSecond = true;
         private TimeSpan _lastRenderTime;
-        
+        private VarianceShadowRenderingProvider _varianceShadowRenderingProvider;
+
 
         public MainWindow()
         {
@@ -162,7 +163,17 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     _dxViewportView.DXScene != null &&
                     _oculusRiftVirtualRealityProvider != null)
                 {
+                    // Initialize Virtual reality rendering
                     _dxViewportView.DXScene.InitializeVirtualRealityRendering(_oculusRiftVirtualRealityProvider);
+
+
+                    // Initialized shadow rendering (see Ab3d.DXEngine.Wpf.Samples project - DXEngine/ShadowRenderingSample for more info
+                    _varianceShadowRenderingProvider = new VarianceShadowRenderingProvider();
+                    _varianceShadowRenderingProvider.ShadowMapSize = 512;
+                    _varianceShadowRenderingProvider.ShadowDepthBluringSize = 2;
+                    _varianceShadowRenderingProvider.ShadowTreshold = 0.2f;
+
+                    _dxViewportView.DXScene.InitializeShadowRendering(_varianceShadowRenderingProvider);
                 }
             };
 
@@ -197,7 +208,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             // Initialize XBOX controller that will control the FirstPersonCamera
             _xInputCameraController = new XInputCameraController();
             _xInputCameraController.TargetCamera = _camera;
-            _xInputCameraController.MovementSpeed = 0.01;
+            _xInputCameraController.MovementSpeed = 0.02;
             _xInputCameraController.MoveVerticallyWithDPadButtons = true;
 
             // We handle the rotation by ourself to prevent rotating the camera up and down - this is done only by HMD
@@ -220,7 +231,8 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             var lightsVisual3D = new ModelVisual3D();
             var lightsGroup = new Model3DGroup();
 
-            var directionalLight = new DirectionalLight(Colors.White, new Vector3D(1, -0.3, 0));
+            var directionalLight = new DirectionalLight(Colors.White, new Vector3D(0.5, -0.3, -0.3));
+            directionalLight.SetDXAttribute(DXAttributeType.IsCastingShadow, true); // Set this light to cast shadow
             lightsGroup.Children.Add(directionalLight);
 
             var ambientLight = new AmbientLight(System.Windows.Media.Color.FromRgb(30, 30, 30));
