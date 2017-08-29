@@ -38,12 +38,12 @@ namespace Ab3d.OculusWrap
         Calibrating = 0x2,
 
         /// <summary>
-        /// Bit set when the camera has tried & failed calibration
+        /// Bit set when the camera has tried and failed calibration
         /// </summary>
         CalibrationFailed = 0x4,
 
         /// <summary>
-        /// Bit set when the camera has tried & passed calibration
+        /// Bit set when the camera has tried and passed calibration
         /// </summary>
         Calibrated = 0x8,
     }
