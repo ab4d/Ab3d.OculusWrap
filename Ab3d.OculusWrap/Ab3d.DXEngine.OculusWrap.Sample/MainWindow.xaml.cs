@@ -124,7 +124,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 try
                 {
                     // Then we initialize Oculus OVR and create a new DXDevice that uses the same adapter (graphic card) as Oculus Rift
-                    _dxDevice = _oculusRiftVirtualRealityProvider.InitializeOvrAndDXDevice(requestedOculusSdkMinorVersion: 10);
+                    _dxDevice = _oculusRiftVirtualRealityProvider.InitializeOvrAndDXDevice(requestedOculusSdkMinorVersion: 17);
                 }
                 catch (Exception ex)
                 {
