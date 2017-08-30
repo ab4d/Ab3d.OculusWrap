@@ -33,7 +33,7 @@ See below for more info.
 ### First time usage guide
 
 1. Connect Oculus Rift and install Oculus runtime.
-2. Download the latest Oculus SDK for PC Development (https://developer3.oculus.com/downloads/)
+2. Make sure that you have "Unknown Sources" enabled in Oculus - Settings - General. This will allow starting applications that are not downloaded from Oculus Store.
 3. Open Ab3d.OculusWrap solution in Visual Studio
 4. Compile the solution. If you do not have Ab3d.DXEngine and Ab3d.PowerToys installed, you will not be able to compile the Ab3d.DXEngine.OculusWrap and Ab3d.DXEngine.OculusWrap.Sample projects. But you can still start the Ab3d.OculusWrap.DemoDX11 project with right clicking on the project and then selecting Debug -> Start new instance.
 5. To try the Ab3d.DXEngine.OculusWrap.Sample, you need to install the Ab3d.DXEngine and Ab3d.PowerToys libraries. This can be done with downloading an evaluation installer from https://www.ab4d.com/Downloads.aspx. After that check that the references to Ab3d.DXEngine and Ab3d.PowerToys are correct and recompile the solution.
@@ -66,12 +66,12 @@ The projects are compiled for .Net 4.0 CP and are using SharpDX 2.6.3 (the lates
 
 The following screenshot is showing the Ab3d.DXEngine.OculusWrap.Sample. And as you can see from the the window title and Oculus Performance overlay it has no problems with rendering at 90 FPS and still having plently of performance headroom.
 
-Ab3d.DXEngine is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
+[Ab3d.DXEngine](https://www.ab4d.com/DXEngine.aspx) is a super fast 3D rendering engine that uses DirectX 11 and SharpDX and can be used in .Net Desktop applications.
 Ab3d.DXEngine is very easy to use. You can use WPF 3D objects to define the 3D scene, cameras and lights.
 To make working with 3D graphics even easier, the Ab3d.DXEngine also fully support the Ab3d.PowerToys library (see below).
 More information about Ab3d.DXEngine can be read on https://www.ab4d.com/DXEngine.aspx
 
-Ab3d.PowerToys library is the ultimate helper library for WPF 3D graphics.
+[Ab3d.PowerToys](https://www.ab4d.com/PowerToys.aspx) library is the ultimate helper library for WPF 3D graphics.
 The library contains many helper classes that greatly simply work with 3D graphics.
 It also comes with many samples that can be used to jump-start development.
 More information about the Ab3d.PowerToys library can be read on https://www.ab4d.com/PowerToys.aspx.
