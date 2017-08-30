@@ -27,9 +27,10 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
     /// </summary>
     public partial class MainWindow : Window
     {
+        public const bool RenderAt90Fps = true; // When true, a background worker is used to force rendering at 90 FPS; when false a standard WPF's Rendering event is used to render at app. 60 FPS
+
         public const bool UseOculusRift = true; // When false, no Oculus device is initialized and we have standard DXEngine 3D rendering
 
-        public const bool RenderAt90Fps = true; // When true, a background worker is used to force rendering at 90 FPS; when false a standard WPF's Rendering event is used to render at app. 60 FPS
 
 
         private OvrWrap _ovr;
@@ -43,15 +44,29 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
         private XInputCameraController _xInputCameraController;
 
         private volatile OculusWrapVirtualRealityProvider _oculusRiftVirtualRealityProvider;
-
-        private string _originalWindowTitle;
+        private VarianceShadowRenderingProvider _varianceShadowRenderingProvider;
 
         private int _framesCount;
         private double _renderTime;
         private int _lastFpsMeterSecond = -1;
         private bool _isFirstSecond = true;
         private TimeSpan _lastRenderTime;
-        private VarianceShadowRenderingProvider _varianceShadowRenderingProvider;
+
+        private string _originalWindowTitle;
+
+        private MeshGeometry3D _leftControllerMesh;
+
+        private ModelVisual3D _leftControllerVisual3D;
+        private QuaternionRotation3D _leftControllerQuaternionRotation3D;
+        private RotateTransform3D _leftControllerBodyRotateTransform3D;
+        private TranslateTransform3D _leftControllerTranslateTransform3D;
+
+        private ModelVisual3D _rightControllerVisual3D;
+        private QuaternionRotation3D _rightControllerQuaternionRotation3D;
+        private RotateTransform3D _rightControllerBodyRotateTransform3D;
+        private TranslateTransform3D _rightControllerTranslateTransform3D;
+
+        private System.Windows.Media.Media3D.Material _controllerMaterial;
 
 
         public MainWindow()
@@ -97,6 +112,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             };
         }
 
+        #region InitializeOvrAndDirectX
         private void InitializeOvrAndDirectX()
         {
             if (UseOculusRift)
@@ -119,6 +135,10 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 string ovrVersionString = _ovr.GetVersionString();
                 _originalWindowTitle = string.Format("DXEngine OculusWrap Sample (OVR v{0})", ovrVersionString);
                 this.Title = _originalWindowTitle;
+
+
+                // Reset tracking origin at startup
+                _ovr.RecenterTrackingOrigin(_oculusRiftVirtualRealityProvider.SessionPtr);
             }
             else
             {
@@ -168,10 +188,12 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
 
                     // Initialized shadow rendering (see Ab3d.DXEngine.Wpf.Samples project - DXEngine/ShadowRenderingSample for more info
-                    _varianceShadowRenderingProvider = new VarianceShadowRenderingProvider();
-                    _varianceShadowRenderingProvider.ShadowMapSize = 512;
-                    _varianceShadowRenderingProvider.ShadowDepthBluringSize = 2;
-                    _varianceShadowRenderingProvider.ShadowTreshold = 0.2f;
+                    _varianceShadowRenderingProvider = new VarianceShadowRenderingProvider()
+                    {
+                        ShadowMapSize = 1024,
+                        ShadowDepthBluringSize = 2,
+                        ShadowTreshold = 0.2f
+                    };
 
                     _dxViewportView.DXScene.InitializeShadowRendering(_varianceShadowRenderingProvider);
                 }
@@ -260,6 +282,8 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     // Create an action that will be called by Dispatcher
                     var refreshDXEngineAction = new Action(() =>
                     {
+                        UpdateScene();
+
                         // Render DXEngine's 3D scene again
                         if (_dxViewportView != null)
                             _dxViewportView.Refresh();
@@ -294,36 +318,13 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 CompositionTarget.Rendering += CompositionTargetOnRendering;
             }
         }
+        #endregion
 
-        // This method is called approximately 60 times per second
-        private void CompositionTargetOnRendering(object sender, EventArgs eventArgs)
+        #region Update
+        // All scene objects updates should be done here
+        private void UpdateScene()
         {
-            // It's possible for Rendering to call back twice in the same frame.
-            // So only render when we haven't already rendered in this frame.
-            var renderingEventArgs = eventArgs as System.Windows.Media.RenderingEventArgs;
-            if (renderingEventArgs != null)
-            {
-                if (renderingEventArgs.RenderingTime == _lastRenderTime)
-                    return;
-
-                _lastRenderTime = renderingEventArgs.RenderingTime;
-            }
-
-            if (_dxViewportView == null || _dxViewportView.IsDisposed) 
-                return; // Window closed
-
-            if (_oculusRiftVirtualRealityProvider != null && _oculusRiftVirtualRealityProvider.LastSessionStatus.ShouldQuit)
-                this.Close(); // Exit the application
-
-            // Render the scene again
-            _dxViewportView.Refresh(); 
-        }
-
-        // This method is called each time DXEngine frame is rendered
-        private void DXViewportViewOnSceneRendered(object sender, EventArgs eventArgs)
-        {
-            // Measure FPS
-            UpdateTitleFpsMeter();
+            ProcessTouchControllers();
         }
 
         private void UpdateTitleFpsMeter()
@@ -382,21 +383,60 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             }
         }
 
+        // This method is called approximately 60 times per second but only when RenderAt90Fps const is false
+        private void CompositionTargetOnRendering(object sender, EventArgs eventArgs)
+        {
+            // It's possible for Rendering to call back twice in the same frame.
+            // So only render when we haven't already rendered in this frame.
+            var renderingEventArgs = eventArgs as System.Windows.Media.RenderingEventArgs;
+            if (renderingEventArgs != null)
+            {
+                if (renderingEventArgs.RenderingTime == _lastRenderTime)
+                    return;
+
+                _lastRenderTime = renderingEventArgs.RenderingTime;
+            }
+
+            if (_dxViewportView == null || _dxViewportView.IsDisposed)
+                return; // Window closed
+
+            if (_oculusRiftVirtualRealityProvider != null && _oculusRiftVirtualRealityProvider.LastSessionStatus.ShouldQuit)
+                this.Close(); // Exit the application
+
+            if (_oculusRiftVirtualRealityProvider == null)
+                return;
+
+
+            UpdateScene();
+
+            // Render the scene again
+            _dxViewportView.Refresh();
+        }
+
+        // This method is called each time DXEngine frame is rendered
+        private void DXViewportViewOnSceneRendered(object sender, EventArgs eventArgs)
+        {
+            // Measure FPS
+            UpdateTitleFpsMeter();
+        }
+        #endregion
+
+        #region CreateSceneObjects
         private void CreateSceneObjects()
         {
             // NOTE: For VR all units must be in meters
-
+            
             var rootVisual3D = new ModelVisual3D();
 
+            // NOTE that the size of the scene will affect the quality of the shadows (bigger scene requite bigger shadow map)
             var floorBox = new BoxVisual3D()
             {
                 CenterPosition = new Point3D(0, -0.5, 0),
-                Size = new Size3D(30, 1, 30),
+                Size = new Size3D(10, 1, 10),                  // 10 x 1 x 10 meters
                 Material = new DiffuseMaterial(Brushes.Green)
             };
 
             rootVisual3D.Children.Add(floorBox);
-
 
             double centerX = 0;
             double centerZ = 0;
@@ -462,12 +502,250 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
             rootVisual3D.Children.Add(dragonBaseBox);
 
-
             _viewport3D.Children.Clear();
             _viewport3D.Children.Add(rootVisual3D);
         }
+        #endregion
+
+        #region Touch controller handling
+        private void ProcessTouchControllers()
+        {
+            if (_oculusRiftVirtualRealityProvider == null)
+                return;
+
+            var sessionPtr = _oculusRiftVirtualRealityProvider.SessionPtr;
+            var connectedControllerTypes = _ovr.GetConnectedControllerTypes(sessionPtr);
+
+            if (connectedControllerTypes.HasFlag(ControllerType.LTouch)) // Is Left touch controller connected?
+            {
+                if (_leftControllerVisual3D == null) // If controller is not yet visible, show it
+                {
+                    EnsureLeftControllerVisual3D();
+                    _viewport3D.Children.Add(_leftControllerVisual3D);
+                }
+            }
+            else
+            {
+                if (_leftControllerVisual3D != null) // If controller is visible, hide it
+                {
+                    _viewport3D.Children.Remove(_leftControllerVisual3D);
+                    _leftControllerVisual3D = null;
+                }
+            }
 
 
+            if (connectedControllerTypes.HasFlag(ControllerType.RTouch)) // Is Right touch controller connected?
+            {
+                if (_rightControllerVisual3D == null) // If controller is not yet visible, show it
+                {
+                    EnsureRightControllerVisual3D();
+                    _viewport3D.Children.Add(_rightControllerVisual3D);
+                }
+            }
+            else
+            {
+                if (_rightControllerVisual3D != null) // If controller is visible, hide it
+                {
+                    _viewport3D.Children.Remove(_rightControllerVisual3D);
+                    _rightControllerVisual3D = null;
+                }
+            }
+
+
+            // If any controller is visible update its transformation
+            if (_leftControllerVisual3D != null || _rightControllerVisual3D != null)
+            {
+                double displayMidpoint = _ovr.GetPredictedDisplayTime(sessionPtr, 0);
+                TrackingState trackingState = _ovr.GetTrackingState(sessionPtr, displayMidpoint, true);
+
+                var cameraPosition = _camera.GetCameraPosition();
+
+                if (_leftControllerVisual3D != null)
+                {
+                    var handPose = trackingState.HandPoses[0].ThePose;
+                    var handPosePosition = handPose.Position;
+
+                    // Update transformations that are already assigned to _leftControllerVisual3D
+
+                    // First rotate the controller based on its rotation in our hand
+                    _leftControllerQuaternionRotation3D.Quaternion = new Quaternion(handPose.Orientation.X, handPose.Orientation.Y, handPose.Orientation.Z, handPose.Orientation.W); // NOTE: Quaternion is struct so no GC "harm" is done here
+
+                    // Now rotate because of our body rotation (the amount of rotation is defined in the _camera.Heading)
+                    // We also need to adjust the center of rotation
+                    
+                    _leftControllerBodyRotateTransform3D.CenterX = -handPosePosition.X;
+                    _leftControllerBodyRotateTransform3D.CenterY = -handPosePosition.Y;
+                    _leftControllerBodyRotateTransform3D.CenterZ = -handPosePosition.Z;
+                    ((AxisAngleRotation3D)_leftControllerBodyRotateTransform3D.Rotation).Angle = -_camera.Heading;
+
+                    // Finally move the controller model for the hand pose offset + body offset
+                    _leftControllerTranslateTransform3D.OffsetX = cameraPosition.X + handPosePosition.X;
+                    _leftControllerTranslateTransform3D.OffsetY = cameraPosition.Y + handPosePosition.Y;
+                    _leftControllerTranslateTransform3D.OffsetZ = cameraPosition.Z + handPosePosition.Z;
+                }
+
+                if (_rightControllerVisual3D != null)
+                {
+                    var handPose = trackingState.HandPoses[1].ThePose;
+                    var handPosePosition = handPose.Position;
+
+                    // Update transformations that are already assigned to _rightControllerVisual3D
+
+                    // First rotate the controller based on its rotation in our hand
+                    _rightControllerQuaternionRotation3D.Quaternion = new Quaternion(handPose.Orientation.X, handPose.Orientation.Y, handPose.Orientation.Z, handPose.Orientation.W); // NOTE: Quaternion is struct so no GC "harm" is done here
+
+                    // Now rotate because of our body rotation (the amount of rotation is defined in the _camera.Heading)
+                    // We also need to adjust the center of rotation
+                    
+                    _rightControllerBodyRotateTransform3D.CenterX = -handPosePosition.X;
+                    _rightControllerBodyRotateTransform3D.CenterY = -handPosePosition.Y;
+                    _rightControllerBodyRotateTransform3D.CenterZ = -handPosePosition.Z;
+                    ((AxisAngleRotation3D)_rightControllerBodyRotateTransform3D.Rotation).Angle = -_camera.Heading;
+
+                    // Finally move the controller model for the hand pose offset + body offset
+                    _rightControllerTranslateTransform3D.OffsetX = cameraPosition.X + handPosePosition.X;
+                    _rightControllerTranslateTransform3D.OffsetY = cameraPosition.Y + handPosePosition.Y;
+                    _rightControllerTranslateTransform3D.OffsetZ = cameraPosition.Z + handPosePosition.Z;
+                }
+
+
+
+                // Check the state of the controller Thicksticks and move or rotate accordingly
+                var leftControllerInputState  = new InputState();
+                var rightControllerInputState = new InputState();
+                _ovr.GetInputState(sessionPtr, ControllerType.LTouch, ref leftControllerInputState);
+                _ovr.GetInputState(sessionPtr, ControllerType.RTouch, ref rightControllerInputState);
+
+                // Change camera angle
+                _camera.Heading += rightControllerInputState.Thumbstick[1].X * _xInputCameraController.RotationSpeed;
+
+                // Now move the camera (use strafe directions)
+                double dx = leftControllerInputState.Thumbstick[0].X * _xInputCameraController.MovementSpeed;
+                double dy = leftControllerInputState.Thumbstick[0].Y * _xInputCameraController.MovementSpeed;
+
+                // strafeDirection is perpendicular to LookDirection and UpDirection
+                var strafeDirection = Vector3D.CrossProduct(_camera.LookDirection, _camera.UpDirection);
+                strafeDirection.Normalize();
+
+                Vector3D movementVector = strafeDirection * dx; // move left / right
+
+                Vector3D usedLookDirection = _camera.LookDirection;
+                if (_xInputCameraController.MoveOnlyHorizontally)
+                    usedLookDirection.Y = 0; // Zero y direction when we move only horizontally
+
+                usedLookDirection.Normalize();
+
+                movementVector += usedLookDirection * dy; // move forward / backward
+
+                _camera.Offset += movementVector;
+            }
+        }
+
+        private void EnsureLeftControllerMesh()
+        {
+            // Controller mash is get from: ovr_sdk_win_1.17.0_public\OculusSDK\Samples\OculusWorldDemo\Assets\Tuscany\LeftController.xml
+            // This model is also used to render the right controller. It is only flipped on x axis (see OculusWorldDemoApp::RenderControllers)
+            _leftControllerMesh = (MeshGeometry3D)this.FindResource("LeftTouchController");
+
+            if (_leftControllerMesh == null)
+                throw new Exception("Cannot find the LeftTouchController MeshGeometry3D - it is defined in the App.xaml");
+
+            // We also create the material here
+            _controllerMaterial = new DiffuseMaterial(new SolidColorBrush(Color.FromRgb(20, 20, 20))); // Almost back Diffuse material
+        }
+
+        private void EnsureLeftControllerVisual3D()
+        {
+            if (_leftControllerVisual3D != null)
+                return;
+
+            EnsureLeftControllerMesh();
+
+            var controllerModel3D = new GeometryModel3D(_leftControllerMesh, _controllerMaterial);
+            controllerModel3D.BackMaterial = _controllerMaterial;
+
+            // Add transformations
+            _leftControllerQuaternionRotation3D = new QuaternionRotation3D();
+            _leftControllerBodyRotateTransform3D = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0)); // rotate around y (up) axis
+            _leftControllerTranslateTransform3D = new TranslateTransform3D();
+
+            var transform3DGroup = new Transform3DGroup();
+            transform3DGroup.Children.Add(new RotateTransform3D(_leftControllerQuaternionRotation3D));
+            transform3DGroup.Children.Add(_leftControllerBodyRotateTransform3D);
+            transform3DGroup.Children.Add(_leftControllerTranslateTransform3D);
+
+            controllerModel3D.Transform = transform3DGroup;
+
+            // Finally create ModelVisualD that can be added to Viewport3D's Children
+            _leftControllerVisual3D = controllerModel3D.CreateModelVisual3D();
+        }
+
+        private void EnsureRightControllerVisual3D()
+        {
+            if (_rightControllerVisual3D != null)
+                return;
+
+
+            // Right controller model is same as left controller but flipped around x axis.
+            // 
+            // Because flipping x axis also change the winding order of triangles, this would lead to showing the model with rendering the inside of the triangles.
+            // To fix that we need to swap the order of triangles with swapping first and second triangle indice.
+
+            EnsureLeftControllerMesh();
+           
+
+            // Flip x position
+            var leftPositions = _leftControllerMesh.Positions;
+            int count = leftPositions.Count;
+
+            var rightPositions = new Point3DCollection(count);
+            for (int i = 0; i < count; i++)
+            {
+                var leftPosition = leftPositions[i];
+                rightPositions.Add(new Point3D(-leftPosition.X, leftPosition.Y, leftPosition.Z));
+            }
+
+            // swap 1st and 2nd triangle indice 
+            var leftTriangleIndices = _leftControllerMesh.TriangleIndices;
+            count = leftTriangleIndices.Count;
+
+            var rightTriangleIndices = new Int32Collection(count);
+            for (int i = 0; i < count; i+=3)
+            {
+                rightTriangleIndices.Add(leftTriangleIndices[i + 1]); 
+                rightTriangleIndices.Add(leftTriangleIndices[i + 0]);
+                rightTriangleIndices.Add(leftTriangleIndices[i + 2]);
+            }
+
+
+            var rightControllerMesh = new MeshGeometry3D()
+            {
+                Positions = rightPositions,
+                TriangleIndices = rightTriangleIndices
+            };
+
+            // Now we can crate the GeometryModel3D and ModelVisual3D
+            var controllerModel3D = new GeometryModel3D(rightControllerMesh, _controllerMaterial);
+            controllerModel3D.BackMaterial = _controllerMaterial;
+
+            // Add transformations
+            _rightControllerQuaternionRotation3D = new QuaternionRotation3D();
+            _rightControllerBodyRotateTransform3D = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0)); // rotate around y (up) axis
+            _rightControllerTranslateTransform3D = new TranslateTransform3D();
+
+            var transform3DGroup = new Transform3DGroup();
+            transform3DGroup.Children.Add(new RotateTransform3D(_rightControllerQuaternionRotation3D));
+            transform3DGroup.Children.Add(_rightControllerBodyRotateTransform3D);
+            transform3DGroup.Children.Add(_rightControllerTranslateTransform3D);
+
+            controllerModel3D.Transform = transform3DGroup;
+
+            // Finally create ModelVisualD that can be added to Viewport3D's Children
+            _rightControllerVisual3D = controllerModel3D.CreateModelVisual3D();
+        }
+        #endregion
+
+        #region Dispose
         private void DisposeOculusRiftVirtualRealityProvider()
         {
             if (_oculusRiftVirtualRealityProvider != null)
@@ -495,6 +773,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                 _dxDevice = null;
             }
         }
+        #endregion
     }
 }
 
