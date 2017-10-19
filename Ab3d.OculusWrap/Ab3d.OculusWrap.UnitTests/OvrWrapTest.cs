@@ -371,6 +371,9 @@ namespace Ab3d.OculusWrap.UnitTests
 
 			EyeRenderDesc renderDesc = OVR.GetRenderDesc(sessionPtr, EyeType.Left, fieldOfView);
 			Assert.AreEqual(renderDesc.Fov, renderDesc.Fov);
+
+            // Test that the GetRenderDesc is returning the correct eye position (or that the workaround is working)
+            Assert.AreNotEqual(renderDesc.HmdToEyePose.Position.X, 0.0f);
 		}
 
 		[TestMethod]

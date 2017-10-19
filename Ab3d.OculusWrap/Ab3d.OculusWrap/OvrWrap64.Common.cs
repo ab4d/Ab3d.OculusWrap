@@ -249,7 +249,23 @@ namespace Ab3d.OculusWrap
         /// <inheritdoc />
         public override EyeRenderDesc GetRenderDesc(IntPtr sessionPtr, EyeType eyeType, FovPort fov)
         {
-            return SafeNativeMethods.ovr_GetRenderDesc(sessionPtr, eyeType, fov);
+            var eyeRenderDesc = SafeNativeMethods.ovr_GetRenderDesc(sessionPtr, eyeType, fov);
+
+            // Workaround for invalid EyeRenderDesc layout (ovr_GetRenderDesc is returning struct in a v1.16 version of EyeRenderDesc)
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (eyeRenderDesc.HmdToEyePose.Position.X == 0)
+            {
+                eyeRenderDesc.HmdToEyePose.Position.X = eyeRenderDesc.HmdToEyePose.Orientation.X;
+                eyeRenderDesc.HmdToEyePose.Position.Y = eyeRenderDesc.HmdToEyePose.Orientation.Y;
+                eyeRenderDesc.HmdToEyePose.Position.Z = eyeRenderDesc.HmdToEyePose.Orientation.Z;
+
+                eyeRenderDesc.HmdToEyePose.Orientation.X = 0;
+                eyeRenderDesc.HmdToEyePose.Orientation.Y = 0;
+                eyeRenderDesc.HmdToEyePose.Orientation.Z = 0;
+                eyeRenderDesc.HmdToEyePose.Orientation.W = 1;
+            }
+
+            return eyeRenderDesc;
         }
 
         /// <inheritdoc />
