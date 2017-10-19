@@ -175,8 +175,8 @@ namespace Ab3d.OculusWrap.DemoDX11
 					// Retrieve size and position of the texture for the current eye.
 					eyeTexture.FieldOfView				= hmdDesc.DefaultEyeFov[eyeIndex];
 					eyeTexture.TextureSize				= OVR.GetFovTextureSize(sessionPtr, eye, hmdDesc.DefaultEyeFov[eyeIndex], 1.0f);
-					//eyeTexture.RenderDescription		= hmd.GetRenderDesc(eye, hmd.DefaultEyeFov[eyeIndex]);
-					eyeTexture.HmdToEyeViewOffset		= eyeTexture.RenderDescription.HmdToEyePose.Position;
+				    eyeTexture.RenderDescription        = OVR.GetRenderDesc(sessionPtr, eye, hmdDesc.DefaultEyeFov[eyeIndex]);
+                    eyeTexture.HmdToEyeViewOffset		= eyeTexture.RenderDescription.HmdToEyePose.Position;
 					eyeTexture.ViewportSize.Position	= new Vector2i(0, 0);
 					eyeTexture.ViewportSize.Size		= eyeTexture.TextureSize;
 					eyeTexture.Viewport					= new Viewport(0, 0, eyeTexture.TextureSize.Width, eyeTexture.TextureSize.Height, 0.0f, 1.0f);
