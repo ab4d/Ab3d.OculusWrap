@@ -598,6 +598,10 @@ namespace Ab3d.OculusWrap
             [DllImport(_ovrDllName, EntryPoint = "ovr_GetFovTextureSize", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern Sizei ovr_GetFovTextureSize(IntPtr sessionPtr, EyeType eye, FovPort fov, float pixelsPerDisplayPixel);
 
+
+            // NOTE: In Oculus SDK 1.17 the EyeRenderDesc was changed. The get the new struct we need to call the ovr_GetRenderDesc2 method.
+            // See https://forums.oculus.com/developer/discussion/comment/562711#Comment_562711
+
             /// <summary>
             /// Computes the distortion viewport, view adjust, and other rendering parameters for
             /// the specified eye.
@@ -616,7 +620,7 @@ namespace Ab3d.OculusWrap
             /// </returns>
             /// <see cref="EyeRenderDesc"/>
             [SuppressUnmanagedCodeSecurity]
-            [DllImport(_ovrDllName, EntryPoint = "ovr_GetRenderDesc", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(_ovrDllName, EntryPoint = "ovr_GetRenderDesc2", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
             internal static extern EyeRenderDesc ovr_GetRenderDesc(IntPtr sessionPtr, EyeType eyeType, FovPort fov);
 
             /// <summary>
