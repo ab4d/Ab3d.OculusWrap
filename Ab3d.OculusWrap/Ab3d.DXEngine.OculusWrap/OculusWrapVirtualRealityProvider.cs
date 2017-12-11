@@ -56,7 +56,9 @@ namespace Ab3d.DXEngine.OculusWrap
         private SessionStatus _sessionStatus;
         private Texture2D _mirrorTextureDX;
         private double _sensorSampleTime;
-        
+
+        private Vector3[] _sceneBoundingCorners;
+
         /// <summary>
         /// Gets the OVR session as IntPtr
         /// </summary>
@@ -525,17 +527,17 @@ namespace Ab3d.DXEngine.OculusWrap
             var viewMatrix = Matrix.LookAtRH(finalCameraPosition, finalCameraPosition + lookDirection, upDirection);
 
 
+            // Calculate optimal camera near and far planes
+            // For this we need all 8 corners of the scene's bounding box and view matrix
+            if (_sceneBoundingCorners == null)
+                _sceneBoundingCorners = new Vector3[8]; // create array here and reuse it on every frame (to prevent garbage)
 
-            float zNear = camera.NearPlaneDistance;
-            float zFar = camera.FarPlaneDistance;
+            renderingContext.DXScene.RootNode.Bounds.BoundingBox.GetCorners(_sceneBoundingCorners);
 
-            if (zNear < 0.05f)
-                zNear = 0.05f;
+            float zNear, zFar;
+            DXScene.CalculateCameraPlanes(ref viewMatrix, isOrthographicProjection: false, isRightHandedCoordinateSystem: true, boundingCorners: _sceneBoundingCorners, adjustValues: true, 
+                                          zNear: out zNear, zFar: out zFar);
 
-            zFar *= 1.2f; // increase the zFar - the FarPlaneDistance is not exactly correct because the camera can be higher because the eye's Position can be over the Camera's position
-
-            //zNear = 0.1f;
-            //zFar = 100;
 
             var eyeRenderDesc = _ovr.GetRenderDesc(_sessionPtr, ovrEye, _hmdDesc.DefaultEyeFov[eyeIndex]);
 
