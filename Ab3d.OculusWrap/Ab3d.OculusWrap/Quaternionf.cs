@@ -27,7 +27,7 @@ namespace Ab3d.OculusWrap
     /// <summary>
     /// A quaternion rotation.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Quaternionf
     {
         /// <summary>
