@@ -75,7 +75,7 @@ namespace Ab3d.DXEngine.OculusWrap
         public SessionStatus LastSessionStatus { get { return _sessionStatus; } }
 
         /// <summary>
-        /// Constructor with already initialized HMD (Head Mounted Display) - its pointer is specifed with ovrSessionPtr.
+        /// Constructor with already initialized HMD (Head Mounted Display) - its pointer is specified with ovrSessionPtr.
         /// </summary>
         /// <param name="ovr">OculusWrap.Wrap</param>
         /// <param name="ovrSessionPtr">Session IntPtr get by call to OculusWrap.Create method</param>
@@ -106,7 +106,7 @@ namespace Ab3d.DXEngine.OculusWrap
         /// <summary>
         /// InitializeOvrAndDXDevice method initializes the Oculus OVR and creates a new DXDevice that uses the same adapter (graphic card) as Oculus Rift.
         /// User need to dispose the created DXDevice when it is not needed any more.
-        /// This method can throw exceptions in case initialization of OVR or DirectX failes.
+        /// This method can throw exceptions in case initialization of OVR or DirectX fails.
         /// </summary>
         /// <param name="requestedOculusSdkMinorVersion">minimal version of Oculus SKD that is required for this application (default value is 17)</param>
         /// <returns>Created DXDevice that needs to be disposed by the user</returns>
