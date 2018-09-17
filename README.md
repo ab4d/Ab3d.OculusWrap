@@ -3,7 +3,7 @@ Ab3d.OculusWrap is a .Net wrapper for Oculus Rift SDK.
 
 ![Oculus Rift with Ab3d.DXEngine DirectX 11 rendering](https://github.com/ab4d/Ab3d.OculusWrap/wiki/images/DXEngine-OculusWrap-890.jpg)
 
-The current version of Ab3d.OculusWrap is built for Oculus SDK 1.10.1 (2016-12-06).
+The current version of Ab3d.OculusWrap is built for Oculus SDK 1.17.0 (2017-08-10).
 
 The library is also available as a NuGet package: Ab3d.OculusWrap (https://www.nuget.org/packages/Ab3d.OculusWrap/)
 
@@ -54,7 +54,7 @@ See below for more info.
 
 The core projects are based on the OculusWrap library that was created by MortInfinite (https://oculuswrap.codeplex.com/)
 
-The projects are compiled for .Net 4.0 CP and are using SharpDX 2.6.3 (the latest version of SharpDX that works with .Net 4.0). If you would like to use SharpDX 3.1 (or newer), you need to change the target framefork to .Net 4.5 (or higher) before updating SharpDX library.
+The projects are compiled for .Net 4.5 and are using SharpDX 4.2.
 
 2) Projects that work with Ab3d.DXEngine and Ab3d.PowerToys libraries:
 
