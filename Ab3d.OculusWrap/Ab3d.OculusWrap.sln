@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ab3d.DXEngine.OculusWrap.WinForms.Sample", "Ab3d.DXEngine.OculusWrap.WinForms.Sample\Ab3d.DXEngine.OculusWrap.WinForms.Sample.csproj", "{B8EF253C-E719-4418-A266-B99FC415BC59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{C7091A3C-F257-4CFC-ADB0-98390CF8A32B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7091A3C-F257-4CFC-ADB0-98390CF8A32B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7091A3C-F257-4CFC-ADB0-98390CF8A32B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8EF253C-E719-4418-A266-B99FC415BC59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8EF253C-E719-4418-A266-B99FC415BC59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8EF253C-E719-4418-A266-B99FC415BC59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8EF253C-E719-4418-A266-B99FC415BC59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

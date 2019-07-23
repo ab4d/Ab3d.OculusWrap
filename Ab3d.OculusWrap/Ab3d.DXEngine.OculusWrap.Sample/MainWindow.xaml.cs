@@ -20,6 +20,17 @@ using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using Result = Ab3d.OculusWrap.Result;
 
+
+// IMPORTANT:
+// This sample shows how to use WPF window to show Oculus VR with Ab3d.DXEngine.
+// Because by default WPF limits frame rate to 60 FPS, the sample is using
+// some tricks (calling DXewportView.Refresh method from background thread) - see RenderAt90Fps.
+//
+// If do not need to show other WPF content in the window,
+// then it is recommended to use WinForms window instead of WPF window.
+// This works in much more similar way as the official Oculus sample in C++.
+// See Ab3d.DXEngine.OculusWrap.WinForms.Sample for more.
+
 namespace Ab3d.DXEngine.OculusWrap.Sample
 {
     /// <summary>
@@ -269,7 +280,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
             {
                 // WPF do not support rendering at more the 60 FPS.
                 // But with a trick where a rendering loop is created in a background thread, it is possible to achieve more than 60 FPS.
-                // In case of sumbiting frames to Oculus Rift, the ovr.SubmitFrame method will limit rendering to 90 FPS.
+                // In case of submitting frames to Oculus Rift at higher FPS, the ovr.SubmitFrame method will limit rendering to 90 FPS.
                 // 
                 // NOTE:
                 // When using DXEngine, it is also possible to render the scene in a background thread. 
