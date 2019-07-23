@@ -39,19 +39,19 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ab3d.DXEngine, Version=3.0.6814.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
+    <Reference Include="Ab3d.DXEngine, Version=3.2.6989.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Ab3d.DXEngine\bin\net45\Ab3d.DXEngine.dll</HintPath>
     </Reference>
-    <Reference Include="Ab3d.DXEngine.Wpf, Version=3.0.6814.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
+    <Reference Include="Ab3d.DXEngine.Wpf, Version=3.2.6989.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Ab3d.DXEngine\bin\net45\Ab3d.DXEngine.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Ab3d.PowerToys, Version=8.2.6814.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
+    <Reference Include="Ab3d.PowerToys, Version=9.0.7115.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Ab3d.PowerToys\bin\net45\Ab3d.PowerToys.dll</HintPath>
     </Reference>
-    <Reference Include="Ab3d.PowerToys.Input, Version=8.2.6814.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
+    <Reference Include="Ab3d.PowerToys.Input, Version=9.0.7115.1045, Culture=neutral, PublicKeyToken=d45c8e156fba2841, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Ab3d.PowerToys\bin\net45\Ab3d.PowerToys.Input.dll</HintPath>
     </Reference>
