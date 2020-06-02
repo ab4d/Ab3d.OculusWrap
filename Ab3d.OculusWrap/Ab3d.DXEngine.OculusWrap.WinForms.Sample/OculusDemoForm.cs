@@ -183,7 +183,7 @@ namespace Ab3d.DXEngine.OculusWrap.WinForms.Sample
             {
                 ShadowMapSize          = 1024,
                 ShadowDepthBluringSize = 2,
-                ShadowTreshold         = 0.2f
+                ShadowThreshold        = 0.2f
             };
 
             _dxViewportView.DXScene.InitializeShadowRendering(_varianceShadowRenderingProvider);

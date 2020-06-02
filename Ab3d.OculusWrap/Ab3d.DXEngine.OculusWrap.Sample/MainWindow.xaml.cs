@@ -203,7 +203,7 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
                     {
                         ShadowMapSize = 1024,
                         ShadowDepthBluringSize = 2,
-                        ShadowTreshold = 0.2f
+                        ShadowThreshold = 0.2f
                     };
 
                     _dxViewportView.DXScene.InitializeShadowRendering(_varianceShadowRenderingProvider);
@@ -239,19 +239,13 @@ namespace Ab3d.DXEngine.OculusWrap.Sample
 
 
             // Initialize XBOX controller that will control the FirstPersonCamera
-            _xInputCameraController = new XInputCameraController();
-            _xInputCameraController.TargetCamera = _camera;
-            _xInputCameraController.MovementSpeed = 0.02;
-            _xInputCameraController.MoveVerticallyWithDPadButtons = true;
-
-            // We handle the rotation by ourself to prevent rotating the camera up and down - this is done only by HMD
-            _xInputCameraController.RightThumbChanged += delegate(object sender, XInputControllerThumbChangedEventArgs e)
+            _xInputCameraController = new XInputCameraController()
             {
-                // Apply only horizontal rotation
-                _camera.Heading += e.NormalizedX * _xInputCameraController.RotationSpeed;
-
-                // Mark the event as handled
-                e.IsHandled = true;
+                TargetCamera = _camera,
+                RotationSpeed = 120,                          // rotation: 120 degrees per second
+                MovementSpeed = 2,                            // movement: 2 meters per second
+                RotateOnlyHorizontally = true,                // do not rotate up and down (changing attitude) with controller - this is done only HMD
+                MoveVerticallyWithDPadButtons = true,
             };
 
             _xInputCameraController.StartCheckingController();
