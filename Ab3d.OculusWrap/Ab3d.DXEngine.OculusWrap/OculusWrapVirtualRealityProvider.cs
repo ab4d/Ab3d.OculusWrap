@@ -354,7 +354,7 @@ namespace Ab3d.DXEngine.OculusWrap
             // In the UpdateRenderingContext (below) we will set the NewViewport property to the size of the FinalBackBuffer
             _resetViewportRenderingStep = new ChangeBackBufferRenderingStep("ResetViewportRenderingStep", "Resets the Viewport from split screen viewport to the final full screen viewport");
 
-            dxScene.RenderingSteps.AddAfter(dxScene.DefaultResolveMultisampledBackBufferRenderingStep, _resetViewportRenderingStep);
+            dxScene.RenderingSteps.AddAfter(dxScene.DefaultResolveBackBufferRenderingStep, _resetViewportRenderingStep);
 
 
             if (renderingStepsLoop != null)
@@ -430,7 +430,7 @@ namespace Ab3d.DXEngine.OculusWrap
                             currentEye == Eye.Left);
                 });
 
-            dxScene.RenderingSteps.AddAfter(dxScene.DefaultResolveMultisampledBackBufferRenderingStep, renderingStepsLoop);
+            dxScene.RenderingSteps.AddAfter(dxScene.DefaultResolveBackBufferRenderingStep, renderingStepsLoop);
         }
 
         /// <summary>
@@ -561,7 +561,8 @@ namespace Ab3d.DXEngine.OculusWrap
                                                backBufferDescription: _eyeTextureSwapChains[eyeIndex].CurrentTextureDescription,
                                                renderTargetView: _eyeTextureSwapChains[eyeIndex].CurrentRTView,
                                                depthStencilView: _eyeTextureSwapChains[eyeIndex].CurrentDepthStencilView,
-                                               bindNewRenderTargetsToDeviceContext: false); // Do not bind new buffers because this is done in the next rendering step - PrepareRenderTargetsRenderingStep
+                                               bindNewRenderTargetsToDeviceContext: false, // Do not bind new buffers because this is done in the next rendering step - PrepareRenderTargetsRenderingStep
+                                               currentSupersamplingCount: 1); 
             }
             else
             {
@@ -570,9 +571,10 @@ namespace Ab3d.DXEngine.OculusWrap
                                                backBufferDescription: _msaaBackBufferDescription,
                                                renderTargetView: _msaaBackBufferRenderTargetView,
                                                depthStencilView: _msaaDepthStencilView,
-                                               bindNewRenderTargetsToDeviceContext: false); // Do not bind new buffers because this is done in the next rendering step - PrepareRenderTargetsRenderingStep
+                                               bindNewRenderTargetsToDeviceContext: false, // Do not bind new buffers because this is done in the next rendering step - PrepareRenderTargetsRenderingStep
+                                               currentSupersamplingCount: 1); 
 
-                renderingContext.DXScene.DefaultResolveMultisampledBackBufferRenderingStep.DestinationBuffer = _eyeTextureSwapChains[eyeIndex].CurrentTexture;
+                renderingContext.DXScene.DefaultResolveBackBufferRenderingStep.SetCustomDestinationBuffer(_eyeTextureSwapChains[eyeIndex].CurrentTexture, _eyeTextureSwapChains[eyeIndex].CurrentTextureDescription, _eyeTextureSwapChains[eyeIndex].CurrentRTView);
             }
 
 
@@ -690,7 +692,7 @@ namespace Ab3d.DXEngine.OculusWrap
                 }
 
                 if (parentDXScene != null)
-                    parentDXScene.DefaultResolveMultisampledBackBufferRenderingStep.DestinationBuffer = null; // Set to previous value
+                    parentDXScene.DefaultResolveBackBufferRenderingStep.ClearCustomDestinationBuffer(); // Set to previous value
             }
 
             base.Dispose(isDisposing);
